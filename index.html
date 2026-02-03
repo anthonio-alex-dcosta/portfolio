@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio — Anthonio Alex D Costa</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Enable manual dark mode
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1c1917',   // stone-900 (Dark)
+                        secondary: '#78716c', // stone-500
+                        accent: '#e7e5e4',    // stone-200
+                        surface: '#fafaf9',   // stone-50 (Light)
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Cal Sans', 'Inter', 'system-ui', 'sans-serif'],
+                    },
+                    letterSpacing: {
+                        tighter: '-0.03em',
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <style>
+        /* Custom Utilities */
+        .glass-nav {
+            background: rgba(250, 250, 249, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(120, 113, 108, 0.1);
+        }
+        
+        /* Dark mode glass nav */
+        .dark .glass-nav {
+            background: rgba(28, 25, 23, 0.85);
+            border-bottom: 1px solid rgba(120, 113, 108, 0.2);
+        }
+
+        /* Smooth Transition for Theme Switch */
+        body, div, section, span, p, h1, h2, h3, a, i, input, textarea, button {
+            transition-property: background-color, border-color, color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 300ms;
+        }
+        
+        /* Scroll Reveal Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Canvas z-index */
+        #networkCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none; /* Let clicks pass through */
+        }
+    </style>
+</head>
+<body class="bg-surface text-primary dark:bg-primary dark:text-surface antialiased selection:bg-stone-200 selection:text-primary dark:selection:bg-stone-700 dark:selection:text-surface overflow-x-hidden">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-24 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-40 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#" class="text-xl font-display font-semibold tracking-tight">
+                    Anthonio<span class="text-secondary">.</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#about" class="text-sm font-medium hover:text-secondary transition-colors">About</a>
+                    <a href="#skills" class="text-sm font-medium hover:text-secondary transition-colors">Skills</a>
+                    <a href="#projects" class="text-sm font-medium hover:text-secondary transition-colors">Projects</a>
+                    
+                    <!-- Theme Toggle Button (Desktop) -->
+                    <button id="theme-toggle-desktop" class="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors" aria-label="Toggle Dark Mode">
+                        <i data-feather="moon" class="w-5 h-5 dark:hidden"></i>
+                        <i data-feather="sun" class="w-5 h-5 hidden dark:block text-yellow-300"></i>
+                    </button>
+
+                    <a href="#contact" class="px-5 py-2 bg-primary text-surface dark:bg-surface dark:text-primary text-sm font-medium rounded-full hover:bg-secondary hover:text-white transition-all">Contact Me</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden gap-4">
+                    <!-- Theme Toggle (Mobile) -->
+                    <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors" aria-label="Toggle Dark Mode">
+                        <i data-feather="moon" class="w-5 h-5 dark:hidden"></i>
+                        <i data-feather="sun" class="w-5 h-5 hidden dark:block text-yellow-300"></i>
+                    </button>
+
+                    <button id="mobile-menu-btn" class="text-primary dark:text-surface hover:text-secondary">
+                        <i data-feather="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-surface dark:bg-primary border-b border-stone-200 dark:border-stone-800 absolute w-full left-0 top-20 shadow-lg">
+            <div class="flex flex-col p-6 space-y-4">
+                <a href="#about" class="text-sm font-medium hover:text-secondary mobile-link">About</a>
+                <a href="#skills" class="text-sm font-medium hover:text-secondary mobile-link">Skills</a>
+                <a href="#projects" class="text-sm font-medium hover:text-secondary mobile-link">Projects</a>
+                <a href="#contact" class="text-sm font-medium hover:text-secondary mobile-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-screen flex items-center pt-20 pb-12 px-6 md:px-12 lg:px-24 relative overflow-hidden">
+            <!-- Background Animation -->
+            <canvas id="networkCanvas"></canvas>
+
+            <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+                <div class="lg:col-span-7 space-y-8 reveal active">
+                    <div class="space-y-4">
+                        <p class="text-secondary text-sm uppercase tracking-widest font-medium">Portfolio 2025</p>
+                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-semibold tracking-tighter leading-[0.9]">
+                            Anthonio<br>
+                            <span class="text-secondary">Alex D Costa</span>
+                        </h1>
+                    </div>
+                    <p class="text-lg md:text-xl text-secondary max-w-md leading-relaxed font-light">
+                        Computer Science Student & Researcher at Brac University specializing in Blockchain, Cybersecurity, and AI-driven solutions.
+                    </p>
+                    <div class="flex items-center gap-6 pt-4">
+                        <a href="#projects" class="group relative px-8 py-4 bg-primary text-surface dark:bg-surface dark:text-primary rounded-full overflow-hidden transition-all duration-300 hover:shadow-2xl">
+                            <span class="relative z-10 font-medium">View Projects</span>
+                            <div class="absolute inset-0 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                        </a>
+                        <a href="#contact" class="text-primary dark:text-surface font-medium hover:text-secondary transition-colors duration-300 flex items-center gap-2 group">
+                            Contact
+                            <i data-feather="arrow-right" class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:col-span-5 relative reveal delay-200">
+                    <div class="aspect-[4/5] rounded-2xl overflow-hidden bg-stone-200 dark:bg-stone-700 shadow-2xl">
+                        <img src="https://lh3.googleusercontent.com/d/1WMgXMbGzrB2wc-E0HTzuxUgAQH6_tAWZ" alt="Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700">
+                    </div>
+                    <!-- Updated Floating Box -->
+                    <div class="absolute -bottom-6 -left-6 bg-white/90 dark:bg-stone-800/90 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-stone-100 dark:border-stone-700 hidden md:block animate-bounce-slow">
+                        <p class="text-xl font-bold text-primary dark:text-surface">Full Stack</p>
+                        <p class="text-secondary dark:text-stone-400 text-sm">Developer</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 px-6 md:px-12 lg:px-24 bg-white dark:bg-stone-900 relative">
+            <!-- Decorative blur -->
+            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-stone-200 dark:bg-stone-800 rounded-full blur-[100px] -z-10"></div>
+
+            <div class="max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                    <div class="lg:col-span-4 reveal">
+                        <div class="sticky top-32">
+                            <h2 class="text-sm uppercase tracking-widest text-secondary dark:text-stone-400 font-bold mb-4">About</h2>
+                            <p class="text-3xl md:text-4xl font-display font-bold tracking-tight leading-tight">
+                                Bridging the gap between theoretical research and practical implementation.
+                            </p>
+                            <div class="mt-8 pt-8 border-t border-stone-200 dark:border-stone-800">
+                                <p class="text-secondary dark:text-stone-400 leading-relaxed">
+                                    I am passionate about solving complex problems through code. My academic background in Computer Science at Brac University has equipped me with a deep understanding of algorithms, data structures, and emerging technologies.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Card 1 -->
+                        <div class="p-6 rounded-2xl bg-surface dark:bg-stone-800 border border-stone-200 dark:border-stone-700 reveal delay-100 hover:border-secondary dark:hover:border-stone-500 transition-colors group">
+                            <div class="w-12 h-12 rounded-xl bg-white dark:bg-stone-700 flex items-center justify-center border border-stone-100 dark:border-stone-600 text-primary dark:text-surface mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                                <i data-feather="award"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-4">Education</h3>
+                            <ul class="space-y-3 text-secondary dark:text-stone-400 text-sm">
+<li><strong>BS CSE</strong> — Brac University<br>CGPA: 3.80/4.00 (2022-2025)</li>
+                                <li><strong>HSC</strong> — Govt. M. M. City College<br>GPA: 5.00/5.00 (2018-2020)</li>
+                                <li><strong>SSC</strong> — Saint Joseph's High School<br>GPA: 5.00/5.00 (2008-2018)</li>
+                            </ul>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="p-6 rounded-2xl bg-surface dark:bg-stone-800 border border-stone-200 dark:border-stone-700 reveal delay-200 hover:border-secondary dark:hover:border-stone-500 transition-colors group">
+                            <div class="w-12 h-12 rounded-xl bg-white dark:bg-stone-700 flex items-center justify-center border border-stone-100 dark:border-stone-600 text-primary dark:text-surface mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                                <i data-feather="briefcase"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-4">Experience</h3>
+                            <ul class="space-y-3 text-secondary dark:text-stone-400 text-sm">
+                                <li><strong>Student Tutor</strong> — Brac University<br>Jan 2024 – Dec 2025</li>
+                                <li class="text-xs mt-1 text-stone-400 dark:text-stone-500">CSE111: Programming Languages II<br>CSE220: Data Structures<br>CSE221: Algorithms</li>
+                            </ul>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="p-6 rounded-2xl bg-surface dark:bg-stone-800 border border-stone-200 dark:border-stone-700 reveal delay-300 hover:border-secondary dark:hover:border-stone-500 transition-colors group">
+                            <div class="w-12 h-12 rounded-xl bg-white dark:bg-stone-700 flex items-center justify-center border border-stone-100 dark:border-stone-600 text-primary dark:text-surface mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                                <i data-feather="cpu"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-4">Research Interests</h3>
+                            <ul class="space-y-2 text-secondary dark:text-stone-400 text-sm">
+                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-secondary rounded-full"></span>Blockchain</li>
+                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-secondary rounded-full"></span>Cybersecurity & Forensics</li>
+                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-secondary rounded-full"></span>AI & Ethical AI</li>
+                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-secondary rounded-full"></span>Privacy-Preserving ML</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-24 px-6 md:px-12 lg:px-24 bg-surface dark:bg-primary">
+            <div class="max-w-7xl mx-auto">
+                <div class="max-w-2xl mb-16 reveal">
+                    <h2 class="text-sm uppercase tracking-widest text-secondary dark:text-stone-400 font-medium mb-4">Skills</h2>
+                    <p class="text-3xl md:text-4xl font-display font-semibold tracking-tight">
+                        Tools and technologies I use to bring ideas to life.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <!-- Technical Skills -->
+                    <div class="space-y-8 reveal delay-100">
+                        <h3 class="font-medium text-lg border-b border-stone-200 dark:border-stone-700 pb-4">Technical Skills</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="font-medium text-sm text-secondary dark:text-stone-400 mb-3">Programming Languages</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Python</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">JavaScript</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">C/C++</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Java</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Solidity</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">x86 Assembly</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-sm text-secondary dark:text-stone-400 mb-3">Web & Blockchain</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">React.js</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Node.js</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Web3.js</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">FastAPI</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Django</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-sm text-secondary dark:text-stone-400 mb-3">Databases & Tools</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">MySQL</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">MongoDB</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Git</span>
+                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Docker</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Skills -->
+                    <div class="space-y-8 reveal delay-200">
+                        <h3 class="font-medium text-lg border-b border-stone-200 dark:border-stone-700 pb-4">Professional Skills</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Technical Mentorship</span>
+                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Leadership</span>
+                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Event Coordination</span>
+                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Public Speaking</span>
+                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Critical Thinking</span>
+                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Team Collaboration</span>
+                        </div>
+                        
+                        <!-- Mini Visual Chart -->
+                        <div class="mt-12 p-6 bg-white dark:bg-stone-800 rounded-xl border border-stone-100 dark:border-stone-700">
+                            <h4 class="text-sm font-medium text-secondary dark:text-stone-400 mb-4">Core Focus</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <span>Blockchain</span>
+                                        <span>85%</span>
+                                    </div>
+                                    <div class="h-2 bg-stone-100 dark:bg-stone-900 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary dark:bg-surface w-[85%] rounded-full"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <span>AI / ML</span>
+                                        <span>70%</span>
+                                    </div>
+                                    <div class="h-2 bg-stone-100 dark:bg-stone-900 rounded-full overflow-hidden">
+                                        <div class="h-full bg-secondary dark:bg-stone-500 w-[70%] rounded-full"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <span>Cybersecurity</span>
+                                        <span>90%</span>
+                                    </div>
+                                    <div class="h-2 bg-stone-100 dark:bg-stone-900 rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary dark:bg-surface w-[90%] rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-24 px-6 md:px-12 lg:px-24 bg-white dark:bg-stone-900">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6 reveal">
+                    <div>
+                        <h2 class="text-sm uppercase tracking-widest text-secondary dark:text-stone-400 font-medium mb-4">Selected Work</h2>
+                        <p class="text-3xl md:text-4xl font-display font-semibold tracking-tight">
+                            Featured Projects
+                        </p>
+                    </div>
+                    <!-- Updated View All Projects Link -->
+                    <a href="https://github.com/anthonio-alex-dcosta" target="_blank" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors flex items-center gap-2 group">
+                        View All Projects
+                        <i data-feather="arrow-up-right" class="w-4 h-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                    </a>
+                </div>
+
+                <!-- Grid Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Project 1: Metaverse (Auth Image - FIXED LINK) -->
+                    <a href="https://github.com/AFK-Swap/SSI_Metaverse.git" target="_blank" class="group block relative reveal delay-100">
+                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
+                            <!-- Fixed: Reliable Picsum Link for Auth -->
+                            <img src="https://www.shutterstock.com/image-photo/futuristic-biometric-authentication-technology-concept-600nw-2495179419.jpg" alt="Biometric Authentication" class="w-full h-full object-cover grayscale transform group-hover:scale-105 transition-all duration-700 hover:grayscale-0">
+                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
+                                <span>Blockchain</span>
+                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
+                                <span>2025</span>
+                            </div>
+                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">Decentralized Metaverse ID</h3>
+                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A secure, decentralized SSI-based authenticator for Metaverse using blockchain.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 2: StoryGram (Library/Books Image) -->
+                    <a href="https://github.com/anthonio-alex-dcosta/StoryGram.git" target="_blank" class="group block relative reveal delay-200 md:mt-24">
+                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
+                            <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Library Books" class="w-full h-full object-cover grayscale transform group-hover:scale-105 transition-all duration-700 hover:grayscale-0">
+                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
+                                <span>Web App</span>
+                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
+                                <span>2023</span>
+                            </div>
+                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">StoryGram: Social Books</h3>
+                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A React & Node.js platform connecting book lovers with lending, reviews, and AI-generated stories.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 3: Missing Persons (Blockchain/Ethereum Image) -->
+                    <a href="https://github.com/anthonio-alex-dcosta/Missing-persons-dapp.git" target="_blank" class="group block relative reveal delay-100">
+                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
+                            <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blockchain Network" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
+                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
+                                <span>Blockchain</span>
+                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
+                                <span>2024</span>
+                            </div>
+                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">Missing Persons Tracker</h3>
+                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A transparent blockchain DApp for tracking missing persons with role-based access control.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 4: Foodzilla (Restaurant/Food Image) -->
+                    <a href="https://github.com/anthonio-alex-dcosta/Express-react-app.git" target="_blank" class="group block relative reveal delay-200 md:mt-24">
+                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
+                            <!-- Restaurant/Food Image -->
+                            <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Gourmet Restaurant" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
+                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
+                                <span>MERN Stack</span>
+                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
+                                <span>2025</span>
+                            </div>
+                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">Foodzilla: Online Bistro</h3>
+                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A scalable MERN stack restaurant app featuring a React frontend and Express API backend.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 5: Movie Ticket (Cinema/Theater Image - FIXED LINK) -->
+                    <a href="https://github.com/anthonio-alex-dcosta/Movie-Ticket-Service.git" target="_blank" class="group block relative reveal delay-100">
+                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
+                            <!-- Fixed: Reliable Picsum Link for Cinema -->
+                            <img src="https://static.gvwire.com/wp-content/uploads/2024/03/16164309/movie-theater-1.jpg" alt="Movie Theater" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
+                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
+                                <span>Web App</span>
+                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
+                                <span>2022</span>
+                            </div>
+                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">Cinema Ticket Service</h3>
+                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A Flask and MySQL movie booking platform with secure payments and fan club features.</p>
+                        </div>
+                    </a>
+
+                    <!-- Project 6: Unit Converter (Balance Scale Image - FIXED LINK) -->
+                    <a href="https://github.com/anthonio-alex-dcosta/Unit_ConV.git" target="_blank" class="group block relative reveal delay-200 md:mt-24">
+                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
+                            <!-- Fixed: Reliable Picsum Link for Scale -->
+                            <img src="https://www.easyfreetools.com/wp-content/uploads/2024/07/mastering-diy-projects-wi-33-768x403.jpg" alt="Weighing Scale" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
+                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
+                                <span>Assembly</span>
+                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
+                                <span>2022</span>
+                            </div>
+                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">DOS Unit Converter</h3>
+                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A low-level x86 Assembly text-based tool for converting measurements via system interrupts.</p>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Hobbies & Interests -->
+        <section id="hobbies" class="py-24 px-6 md:px-12 lg:px-24 bg-surface dark:bg-primary">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center max-w-2xl mx-auto mb-16 reveal">
+                    <h2 class="text-sm uppercase tracking-widest text-secondary dark:text-stone-400 font-medium mb-4">Beyond Work</h2>
+                    <p class="text-3xl md:text-4xl font-display font-semibold tracking-tight">
+                        Interests & Passions
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white dark:bg-stone-800 p-8 rounded-2xl border border-stone-100 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-colors group text-center reveal delay-100 cursor-default hover:-translate-y-2 duration-300">
+                        <i data-feather="aperture" class="w-8 h-8 mx-auto mb-4 text-secondary group-hover:text-primary dark:group-hover:text-surface transition-colors"></i>
+                        <h3 class="font-medium">Photography</h3>
+                    </div>
+                    <div class="bg-white dark:bg-stone-800 p-8 rounded-2xl border border-stone-100 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-colors group text-center reveal delay-200 cursor-default hover:-translate-y-2 duration-300">
+                        <i data-feather="map" class="w-8 h-8 mx-auto mb-4 text-secondary group-hover:text-primary dark:group-hover:text-surface transition-colors"></i>
+                        <h3 class="font-medium">Travel</h3>
+                    </div>
+                    <div class="bg-white dark:bg-stone-800 p-8 rounded-2xl border border-stone-100 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-colors group text-center reveal delay-300 cursor-default hover:-translate-y-2 duration-300">
+                        <i data-feather="coffee" class="w-8 h-8 mx-auto mb-4 text-secondary group-hover:text-primary dark:group-hover:text-surface transition-colors"></i>
+                        <h3 class="font-medium">Typography</h3>
+                    </div>
+                    <div class="bg-white dark:bg-stone-800 p-8 rounded-2xl border border-stone-100 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-colors group text-center reveal delay-400 cursor-default hover:-translate-y-2 duration-300">
+                        <i data-feather="music" class="w-8 h-8 mx-auto mb-4 text-secondary group-hover:text-primary dark:group-hover:text-surface transition-colors"></i>
+                        <h3 class="font-medium">Jazz</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 px-6 md:px-12 lg:px-24 bg-primary text-white dark:bg-white dark:text-primary relative overflow-hidden">
+            <!-- Subtle background decoration -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-secondary opacity-5 dark:opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+
+            <div class="max-w-4xl mx-auto relative z-10">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="text-sm uppercase tracking-widest text-stone-400 dark:text-stone-500 font-medium mb-4">Contact</h2>
+                    <p class="text-3xl md:text-5xl font-display font-semibold tracking-tight mb-6">
+                        Let's create something together.
+                    </p>
+                    <p class="text-stone-400 dark:text-stone-500 text-lg">Open for freelance projects and collaborations.</p>
+                </div>
+
+                <form id="contactForm" class="space-y-6 max-w-xl mx-auto reveal delay-100">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="name" class="text-sm font-medium text-stone-300 dark:text-stone-600">Name</label>
+                            <input type="text" id="name" required class="w-full px-4 py-3 bg-stone-800 dark:bg-stone-100 border border-stone-700 dark:border-stone-300 rounded-lg focus:outline-none focus:border-stone-500 text-white dark:text-primary placeholder-stone-500 dark:placeholder-stone-400 transition-colors" placeholder="John Doe">
+                        </div>
+                        <div class="space-y-2">
+                            <label for="email" class="text-sm font-medium text-stone-300 dark:text-stone-600">Email</label>
+                            <input type="email" id="email" required class="w-full px-4 py-3 bg-stone-800 dark:bg-stone-100 border border-stone-700 dark:border-stone-300 rounded-lg focus:outline-none focus:border-stone-500 text-white dark:text-primary placeholder-stone-500 dark:placeholder-stone-400 transition-colors" placeholder="john@example.com">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label for="message" class="text-sm font-medium text-stone-300 dark:text-stone-600">Message</label>
+                        <textarea id="message" rows="5" required class="w-full px-4 py-3 bg-stone-800 dark:bg-stone-100 border border-stone-700 dark:border-stone-300 rounded-lg focus:outline-none focus:border-stone-500 text-white dark:text-primary placeholder-stone-500 dark:placeholder-stone-400 transition-colors resize-none" placeholder="Tell me about your project..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-4 bg-white dark:bg-primary text-primary dark:text-surface rounded-lg font-medium hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors duration-300 flex items-center justify-center gap-2 group">
+                        <span>Send Message</span>
+                        <i data-feather="send" class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+                <div>
+                    <a href="#" class="text-2xl font-display font-semibold tracking-tight">
+                        Anthonio<span class="text-secondary">.</span>
+                    </a>
+                    <p class="text-sm text-secondary dark:text-stone-400 mt-2 max-w-xs">
+                        Building secure, intelligent, and user-friendly digital experiences.
+                    </p>
+                </div>
+                <div class="flex gap-6">
+                    <a href="https://github.com/anthonio-alex-dcosta" target="_blank" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
+                        <i data-feather="github" class="w-5 h-5"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/anthonio-alex-d-costa-515aba373/" target="_blank" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
+                        <i data-feather="linkedin" class="w-5 h-5"></i>
+                    </a>
+                    <a href="https://x.com/Axel22101749" target="_blank" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
+                        <i data-feather="twitter" class="w-5 h-5"></i>
+                    </a>
+                    <a href="mailto:alexanthonio05@gmail.com" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
+                        <i data-feather="mail" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-stone-200 dark:border-stone-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-secondary dark:text-stone-400">© 2025 Anthonio Alex D Costa. All rights reserved.</p>
+                <div class="flex gap-6 text-xs text-secondary dark:text-stone-400">
+                    <a href="#" class="hover:text-primary dark:hover:text-surface">Privacy Policy</a>
+                    <a href="#" class="hover:text-primary dark:hover:text-surface">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main Application Script -->
+    <script>
+        // --- 0. Theme Toggle Logic ---
+        const themeToggleDesktop = document.getElementById('theme-toggle-desktop');
+        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+        const htmlElement = document.documentElement;
+
+        // Check local storage or system preference
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+        } else {
+            htmlElement.classList.remove('dark');
+        }
+
+        function toggleTheme() {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+            // Re-render feather icons to ensure correct visibility (hidden/block toggles)
+            feather.replace();
+        }
+
+        themeToggleDesktop.addEventListener('click', toggleTheme);
+        themeToggleMobile.addEventListener('click', toggleTheme);
+
+
+        // --- 1. Initialize Feather Icons ---
+        feather.replace();
+
+        // --- 2. Navigation Logic ---
+        const navbar = document.getElementById('navbar');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        // Scroll Effect for Navbar
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-sm');
+                navbar.classList.replace('h-20', 'h-16');
+            } else {
+                navbar.classList.remove('shadow-sm');
+                navbar.classList.replace('h-16', 'h-20');
+            }
+        });
+
+        // Mobile Menu Toggle
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.setAttribute('data-feather', 'menu');
+            } else {
+                icon.setAttribute('data-feather', 'x');
+            }
+            feather.replace();
+        });
+
+        // Close mobile menu on link click
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.setAttribute('data-feather', 'menu');
+                feather.replace();
+            });
+        });
+
+        // --- 3. Scroll Reveal Animation (Intersection Observer) ---
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, {
+            root: null,
+            threshold: 0.15,
+            rootMargin: "0px"
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // --- 4. Contact Form Handling ---
+        const contactForm = document.getElementById('contactForm');
+        
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const baseClasses = "pointer-events-auto flex items-center w-full max-w-xs p-4 space-x-3 text-gray-500 bg-white dark:bg-stone-800 dark:text-gray-200 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full opacity-0";
+            const iconHtml = type === 'success' 
+                ? `<div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 dark:bg-green-900 rounded-lg"><i data-feather="check" class="w-5 h-5"></i></div>`
+                : `<div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 dark:bg-red-900 rounded-lg"><i data-feather="alert-circle" class="w-5 h-5"></i></div>`;
+            
+            toast.className = baseClasses;
+            toast.innerHTML = `
+                ${iconHtml}
+                <div class="text-sm font-normal text-primary dark:text-surface">${message}</div>
+            `;
+
+            container.appendChild(toast);
+            feather.replace();
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-x-full', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = contactForm.querySelector('button');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = `<i data-feather="loader" class="animate-spin"></i> Sending...`;
+            feather.replace();
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast('Message sent successfully!');
+                contactForm.reset();
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 1500);
+        });
+
+        // --- 5. Hero Animation: Network/Blockchain Canvas (Updated for Dark Mode) ---
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        const particleCount = window.innerWidth < 768 ? 30 : 60; 
+        const connectionDistance = 150;
+        const mouseDistance = 200;
+
+        let mouse = { x: null, y: null };
+        window.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        function resize() {
+            width = canvas.width = canvas.parentElement.offsetWidth;
+            height = canvas.height = canvas.parentElement.offsetHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5; 
+                this.vy = (Math.random() - 0.5) * 0.5; 
+                this.size = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouseDistance) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mouseDistance - distance) / mouseDistance;
+                        const directionX = forceDirectionX * force * 0.5; 
+                        const directionY = forceDirectionY * force * 0.5;
+                        this.x -= directionX;
+                        this.y -= directionY;
+                    }
+                }
+            }
+
+            draw() {
+                // Dynamic color based on theme
+                const isDark = htmlElement.classList.contains('dark');
+                ctx.fillStyle = isDark ? '#a8a29e' : '#78716c'; // Lighter gray for dark mode, darker for light
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            const isDark = htmlElement.classList.contains('dark');
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < connectionDistance) {
+                        ctx.beginPath();
+                        let opacity = 1 - (distance / connectionDistance);
+                        // Dynamic line color/opacity
+                        let lineColor = isDark ? '168, 162, 158' : '120, 113, 108'; // RGB values
+                        ctx.strokeStyle = `rgba(${lineColor}, ${opacity * 0.2})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+    </script>
+</body>
+</html>
