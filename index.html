@@ -5,20 +5,104 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio — Anthonio Alex D Costa</title>
     
+    <!-- Preconnect to CDN for faster loading -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Critical CSS - Prevents flash of unstyled content -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #fafaf9;
+            color: #1c1917;
+            overflow-x: hidden;
+        }
+        
+        html.dark body {
+            background-color: #1c1917;
+            color: #fafaf9;
+        }
+        
+        #hero, nav {
+            opacity: 0;
+            animation: fadeIn 0.3s ease-in forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fafaf9;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        html.dark .loading-overlay {
+            background: #1c1917;
+        }
+        
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(120, 113, 108, 0.3);
+            border-top-color: #78716c;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    
+    <!-- Apply theme from localStorage immediately -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
-            darkMode: 'class', // Enable manual dark mode
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1c1917',   // stone-900 (Dark)
-                        secondary: '#78716c', // stone-500
-                        accent: '#e7e5e4',    // stone-200
-                        surface: '#fafaf9',   // stone-50 (Light)
+                        primary: '#1c1917',
+                        secondary: '#78716c',
+                        accent: '#e7e5e4',
+                        surface: '#fafaf9',
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -42,14 +126,7 @@
         }
     </script>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
-
     <style>
-        /* Custom Utilities */
         .glass-nav {
             background: rgba(250, 250, 249, 0.85);
             backdrop-filter: blur(12px);
@@ -57,20 +134,17 @@
             border-bottom: 1px solid rgba(120, 113, 108, 0.1);
         }
         
-        /* Dark mode glass nav */
         .dark .glass-nav {
             background: rgba(28, 25, 23, 0.85);
             border-bottom: 1px solid rgba(120, 113, 108, 0.2);
         }
 
-        /* Smooth Transition for Theme Switch */
         body, div, section, span, p, h1, h2, h3, a, i, input, textarea, button {
             transition-property: background-color, border-color, color, fill, stroke;
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
             transition-duration: 300ms;
         }
         
-        /* Scroll Reveal Classes */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -81,7 +155,6 @@
             transform: translateY(0);
         }
 
-        /* Canvas z-index */
         #networkCanvas {
             position: absolute;
             top: 0;
@@ -89,11 +162,16 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            pointer-events: none; /* Let clicks pass through */
+            pointer-events: none;
         }
     </style>
 </head>
 <body class="bg-surface text-primary dark:bg-primary dark:text-surface antialiased selection:bg-stone-200 selection:text-primary dark:selection:bg-stone-700 dark:selection:text-surface overflow-x-hidden">
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
 
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed top-24 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
@@ -102,18 +180,15 @@
     <nav class="fixed w-full z-40 glass-nav transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
             <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
                 <a href="#" class="text-xl font-display font-semibold tracking-tight">
                     Anthonio<span class="text-secondary">.</span>
                 </a>
 
-                <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="#about" class="text-sm font-medium hover:text-secondary transition-colors">About</a>
                     <a href="#skills" class="text-sm font-medium hover:text-secondary transition-colors">Skills</a>
                     <a href="#projects" class="text-sm font-medium hover:text-secondary transition-colors">Projects</a>
                     
-                    <!-- Theme Toggle Button (Desktop) -->
                     <button id="theme-toggle-desktop" class="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors" aria-label="Toggle Dark Mode">
                         <i data-feather="moon" class="w-5 h-5 dark:hidden"></i>
                         <i data-feather="sun" class="w-5 h-5 hidden dark:block text-yellow-300"></i>
@@ -122,9 +197,7 @@
                     <a href="#contact" class="px-5 py-2 bg-primary text-surface dark:bg-surface dark:text-primary text-sm font-medium rounded-full hover:bg-secondary hover:text-white transition-all">Contact Me</a>
                 </div>
 
-                <!-- Mobile Menu Button -->
                 <div class="flex items-center md:hidden gap-4">
-                    <!-- Theme Toggle (Mobile) -->
                     <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors" aria-label="Toggle Dark Mode">
                         <i data-feather="moon" class="w-5 h-5 dark:hidden"></i>
                         <i data-feather="sun" class="w-5 h-5 hidden dark:block text-yellow-300"></i>
@@ -137,7 +210,6 @@
             </div>
         </div>
         
-        <!-- Mobile Menu Dropdown -->
         <div id="mobile-menu" class="hidden md:hidden bg-surface dark:bg-primary border-b border-stone-200 dark:border-stone-800 absolute w-full left-0 top-20 shadow-lg">
             <div class="flex flex-col p-6 space-y-4">
                 <a href="#about" class="text-sm font-medium hover:text-secondary mobile-link">About</a>
@@ -151,7 +223,6 @@
     <main>
         <!-- Hero Section -->
         <section id="hero" class="min-h-screen flex items-center pt-20 pb-12 px-6 md:px-12 lg:px-24 relative overflow-hidden">
-            <!-- Background Animation -->
             <canvas id="networkCanvas"></canvas>
 
             <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
@@ -181,7 +252,6 @@
                     <div class="aspect-[4/5] rounded-2xl overflow-hidden bg-stone-200 dark:bg-stone-700 shadow-2xl">
                         <img src="https://lh3.googleusercontent.com/d/1WMgXMbGzrB2wc-E0HTzuxUgAQH6_tAWZ" alt="Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700">
                     </div>
-                    <!-- Updated Floating Box -->
                     <div class="absolute -bottom-6 -left-6 bg-white/90 dark:bg-stone-800/90 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-stone-100 dark:border-stone-700 hidden md:block animate-bounce-slow">
                         <p class="text-xl font-bold text-primary dark:text-surface">Full Stack</p>
                         <p class="text-secondary dark:text-stone-400 text-sm">Developer</p>
@@ -192,7 +262,6 @@
 
         <!-- About Section -->
         <section id="about" class="py-24 px-6 md:px-12 lg:px-24 bg-white dark:bg-stone-900 relative">
-            <!-- Decorative blur -->
             <div class="absolute left-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-stone-200 dark:bg-stone-800 rounded-full blur-[100px] -z-10"></div>
 
             <div class="max-w-7xl mx-auto">
@@ -211,19 +280,17 @@
                         </div>
                     </div>
                     <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Card 1 -->
                         <div class="p-6 rounded-2xl bg-surface dark:bg-stone-800 border border-stone-200 dark:border-stone-700 reveal delay-100 hover:border-secondary dark:hover:border-stone-500 transition-colors group">
                             <div class="w-12 h-12 rounded-xl bg-white dark:bg-stone-700 flex items-center justify-center border border-stone-100 dark:border-stone-600 text-primary dark:text-surface mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
                                 <i data-feather="award"></i>
                             </div>
                             <h3 class="font-bold text-lg mb-4">Education</h3>
                             <ul class="space-y-3 text-secondary dark:text-stone-400 text-sm">
-<li><strong>BS CSE</strong> — Brac University<br>CGPA: 3.80/4.00 (2022-2025)</li>
+                                <li><strong>BS CSE</strong> — Brac University<br>CGPA: 3.80/4.00 (2022-2025)</li>
                                 <li><strong>HSC</strong> — Govt. M. M. City College<br>GPA: 5.00/5.00 (2018-2020)</li>
                                 <li><strong>SSC</strong> — Saint Joseph's High School<br>GPA: 5.00/5.00 (2008-2018)</li>
                             </ul>
                         </div>
-                        <!-- Card 2 -->
                         <div class="p-6 rounded-2xl bg-surface dark:bg-stone-800 border border-stone-200 dark:border-stone-700 reveal delay-200 hover:border-secondary dark:hover:border-stone-500 transition-colors group">
                             <div class="w-12 h-12 rounded-xl bg-white dark:bg-stone-700 flex items-center justify-center border border-stone-100 dark:border-stone-600 text-primary dark:text-surface mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
                                 <i data-feather="briefcase"></i>
@@ -234,7 +301,6 @@
                                 <li class="text-xs mt-1 text-stone-400 dark:text-stone-500">CSE111: Programming Languages II<br>CSE220: Data Structures<br>CSE221: Algorithms</li>
                             </ul>
                         </div>
-                        <!-- Card 3 -->
                         <div class="p-6 rounded-2xl bg-surface dark:bg-stone-800 border border-stone-200 dark:border-stone-700 reveal delay-300 hover:border-secondary dark:hover:border-stone-500 transition-colors group">
                             <div class="w-12 h-12 rounded-xl bg-white dark:bg-stone-700 flex items-center justify-center border border-stone-100 dark:border-stone-600 text-primary dark:text-surface mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
                                 <i data-feather="cpu"></i>
@@ -262,7 +328,6 @@
                     </p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <!-- Technical Skills -->
                     <div class="space-y-8 reveal delay-100">
                         <h3 class="font-medium text-lg border-b border-stone-200 dark:border-stone-700 pb-4">Technical Skills</h3>
                         <div class="space-y-6">
@@ -299,7 +364,6 @@
                         </div>
                     </div>
 
-                    <!-- Professional Skills -->
                     <div class="space-y-8 reveal delay-200">
                         <h3 class="font-medium text-lg border-b border-stone-200 dark:border-stone-700 pb-4">Professional Skills</h3>
                         <div class="flex flex-wrap gap-3">
@@ -311,7 +375,6 @@
                             <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Team Collaboration</span>
                         </div>
                         
-                        <!-- Mini Visual Chart -->
                         <div class="mt-12 p-6 bg-white dark:bg-stone-800 rounded-xl border border-stone-100 dark:border-stone-700">
                             <h4 class="text-sm font-medium text-secondary dark:text-stone-400 mb-4">Core Focus</h4>
                             <div class="space-y-3">
@@ -359,20 +422,17 @@
                             Featured Projects
                         </p>
                     </div>
-                    <!-- Updated View All Projects Link -->
                     <a href="https://github.com/anthonio-alex-dcosta" target="_blank" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors flex items-center gap-2 group">
                         View All Projects
                         <i data-feather="arrow-up-right" class="w-4 h-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
                     </a>
                 </div>
 
-                <!-- Grid Layout -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     
-                    <!-- Project 1: Metaverse (Auth Image - FIXED LINK) -->
+                    <!-- Project 1: Metaverse -->
                     <a href="https://github.com/AFK-Swap/SSI_Metaverse.git" target="_blank" class="group block relative reveal delay-100">
                         <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
-                            <!-- Fixed: Reliable Picsum Link for Auth -->
                             <img src="https://www.shutterstock.com/image-photo/futuristic-biometric-authentication-technology-concept-600nw-2495179419.jpg" alt="Biometric Authentication" class="w-full h-full object-cover grayscale transform group-hover:scale-105 transition-all duration-700 hover:grayscale-0">
                             <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
                         </div>
@@ -387,7 +447,7 @@
                         </div>
                     </a>
 
-                    <!-- Project 2: StoryGram (Library/Books Image) -->
+                    <!-- Project 2: StoryGram -->
                     <a href="https://github.com/anthonio-alex-dcosta/StoryGram.git" target="_blank" class="group block relative reveal delay-200 md:mt-24">
                         <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
                             <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Library Books" class="w-full h-full object-cover grayscale transform group-hover:scale-105 transition-all duration-700 hover:grayscale-0">
@@ -404,7 +464,7 @@
                         </div>
                     </a>
 
-                    <!-- Project 3: Missing Persons (Blockchain/Ethereum Image) -->
+                    <!-- Project 3: Missing Persons -->
                     <a href="https://github.com/anthonio-alex-dcosta/Missing-persons-dapp.git" target="_blank" class="group block relative reveal delay-100">
                         <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
                             <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blockchain Network" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
@@ -421,10 +481,9 @@
                         </div>
                     </a>
 
-                    <!-- Project 4: Foodzilla (Restaurant/Food Image) -->
+                    <!-- Project 4: Foodzilla -->
                     <a href="https://github.com/anthonio-alex-dcosta/Express-react-app.git" target="_blank" class="group block relative reveal delay-200 md:mt-24">
                         <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
-                            <!-- Restaurant/Food Image -->
                             <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Gourmet Restaurant" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
                             <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
                         </div>
@@ -439,10 +498,9 @@
                         </div>
                     </a>
 
-                    <!-- Project 5: Movie Ticket (Cinema/Theater Image - FIXED LINK) -->
+                    <!-- Project 5: Movie Ticket -->
                     <a href="https://github.com/anthonio-alex-dcosta/Movie-Ticket-Service.git" target="_blank" class="group block relative reveal delay-100">
                         <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
-                            <!-- Fixed: Reliable Picsum Link for Cinema -->
                             <img src="https://static.gvwire.com/wp-content/uploads/2024/03/16164309/movie-theater-1.jpg" alt="Movie Theater" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
                             <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
                         </div>
@@ -457,10 +515,9 @@
                         </div>
                     </a>
 
-                    <!-- Project 6: Unit Converter (Balance Scale Image - FIXED LINK) -->
+                    <!-- Project 6: Unit Converter -->
                     <a href="https://github.com/anthonio-alex-dcosta/Unit_ConV.git" target="_blank" class="group block relative reveal delay-200 md:mt-24">
                         <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
-                            <!-- Fixed: Reliable Picsum Link for Scale -->
                             <img src="https://www.easyfreetools.com/wp-content/uploads/2024/07/mastering-diy-projects-wi-33-768x403.jpg" alt="Weighing Scale" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
                             <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
                         </div>
@@ -512,7 +569,6 @@
 
         <!-- Contact Section -->
         <section id="contact" class="py-24 px-6 md:px-12 lg:px-24 bg-primary text-white dark:bg-white dark:text-primary relative overflow-hidden">
-            <!-- Subtle background decoration -->
             <div class="absolute top-0 right-0 w-96 h-96 bg-secondary opacity-5 dark:opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
 
             <div class="max-w-4xl mx-auto relative z-10">
@@ -570,7 +626,7 @@
                     <a href="https://x.com/Axel22101749" target="_blank" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
                         <i data-feather="twitter" class="w-5 h-5"></i>
                     </a>
-                    <a href="mailto:alexanthonio05@gmail.com" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
+                    <a href="mailto:anthonioalexdcosta@gmail.com" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
                         <i data-feather="mail" class="w-5 h-5"></i>
                     </a>
                 </div>
@@ -585,14 +641,21 @@
         </div>
     </footer>
 
-    <!-- Main Application Script -->
     <script>
-        // --- 0. Theme Toggle Logic ---
+        // --- 0. Hide loading overlay once page is ready ---
+        window.addEventListener('load', () => {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+            }, 300);
+        });
+
+        // --- 1. Theme Toggle Logic ---
         const themeToggleDesktop = document.getElementById('theme-toggle-desktop');
         const themeToggleMobile = document.getElementById('theme-toggle-mobile');
         const htmlElement = document.documentElement;
 
-        // Check local storage or system preference
+        // Already applied in head, but check again for safety
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             htmlElement.classList.add('dark');
         } else {
@@ -607,35 +670,29 @@
                 htmlElement.classList.add('dark');
                 localStorage.theme = 'dark';
             }
-            // Re-render feather icons to ensure correct visibility (hidden/block toggles)
             feather.replace();
         }
 
         themeToggleDesktop.addEventListener('click', toggleTheme);
         themeToggleMobile.addEventListener('click', toggleTheme);
 
-
-        // --- 1. Initialize Feather Icons ---
+        // --- 2. Initialize Feather Icons ---
         feather.replace();
 
-        // --- 2. Navigation Logic ---
+        // --- 3. Navigation Logic ---
         const navbar = document.getElementById('navbar');
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileLinks = document.querySelectorAll('.mobile-link');
 
-        // Scroll Effect for Navbar
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
                 navbar.classList.add('shadow-sm');
-                navbar.classList.replace('h-20', 'h-16');
             } else {
                 navbar.classList.remove('shadow-sm');
-                navbar.classList.replace('h-16', 'h-20');
             }
         });
 
-        // Mobile Menu Toggle
         mobileMenuBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
             const icon = mobileMenuBtn.querySelector('i');
@@ -647,24 +704,20 @@
             feather.replace();
         });
 
-        // Close mobile menu on link click
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 mobileMenu.classList.add('hidden');
-                const icon = mobileMenuBtn.querySelector('i');
-                icon.setAttribute('data-feather', 'menu');
-                feather.replace();
             });
         });
 
-        // --- 3. Scroll Reveal Animation (Intersection Observer) ---
+        // --- 4. Scroll Reveal Animation ---
         const revealElements = document.querySelectorAll('.reveal');
         
         const revealObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
-                    observer.unobserve(entry.target); // Only animate once
+                    observer.unobserve(entry.target);
                 }
             });
         }, {
@@ -675,7 +728,7 @@
 
         revealElements.forEach(el => revealObserver.observe(el));
 
-        // --- 4. Contact Form Handling ---
+        // --- 5. Contact Form Handling ---
         const contactForm = document.getElementById('contactForm');
         
         function showToast(message, type = 'success') {
@@ -720,10 +773,11 @@
                 contactForm.reset();
                 btn.innerHTML = originalText;
                 btn.disabled = false;
+                feather.replace();
             }, 1500);
         });
 
-        // --- 5. Hero Animation: Network/Blockchain Canvas (Updated for Dark Mode) ---
+        // --- 6. Network Canvas Animation ---
         const canvas = document.getElementById('networkCanvas');
         const ctx = canvas.getContext('2d');
         
@@ -785,9 +839,8 @@
             }
 
             draw() {
-                // Dynamic color based on theme
                 const isDark = htmlElement.classList.contains('dark');
-                ctx.fillStyle = isDark ? '#a8a29e' : '#78716c'; // Lighter gray for dark mode, darker for light
+                ctx.fillStyle = isDark ? '#a8a29e' : '#78716c';
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
@@ -819,8 +872,7 @@
                     if (distance < connectionDistance) {
                         ctx.beginPath();
                         let opacity = 1 - (distance / connectionDistance);
-                        // Dynamic line color/opacity
-                        let lineColor = isDark ? '168, 162, 158' : '120, 113, 108'; // RGB values
+                        let lineColor = isDark ? '168, 162, 158' : '120, 113, 108';
                         ctx.strokeStyle = `rgba(${lineColor}, ${opacity * 0.2})`;
                         ctx.lineWidth = 1;
                         ctx.moveTo(particles[i].x, particles[i].y);
@@ -829,10 +881,10 @@
                     }
                 }
             }
+
             requestAnimationFrame(animate);
         }
         animate();
-
     </script>
 </body>
 </html>
