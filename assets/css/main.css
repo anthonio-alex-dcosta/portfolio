@@ -898,6 +898,10 @@ main { display: block; }
   .widget--focus { padding: 12px 14px; }
   .widget__title { font-size: 0.875rem; }
   .widget__sub { font-size: 0.8125rem; }
+  /* Narrow cards on phones leave room for a wide ring */
+  .widget { max-width: 176px; }
+  .widget--focus .tags { gap: 4px; }
+  .widget--focus .tags li { padding: 3px 8px 3px 7px; font-size: 0.75rem; }
   .mini-ring { width: 36px; height: 36px; }
   .widget-wrap--1 { top: 36%; left: 0; }
   .widget-wrap--2 { top: 62%; right: 0; }

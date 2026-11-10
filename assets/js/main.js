@@ -605,20 +605,24 @@
       var cy = wr.top + wr.height / 2 + orb.offsetWidth * 0.04 - vr.top;
       var vw = document.documentElement.clientWidth;
       var small = vr.width < 520;
-      var base = small ? 0.82 : 1;
-      var Rx = vr.width * (small ? 0.36 : 0.42);
-      var Ry = vr.height * 0.3;
+      var base = small ? 0.9 : 1;
       var absCx = vr.left + cx;
+      // One ring for all three, sized once per frame: as wide as the screen
+      // allows for the widest card at its largest (front) size.
+      var maxHalf = 0;
+      items.forEach(function (it) { if (it.half > maxHalf) maxHalf = it.half; });
+      maxHalf *= base * 1.05;
+      var room = Math.min(vw - 10 - absCx, absCx - 10) - maxHalf;
+      var rx = Math.max(0, Math.min(vr.width * 0.42, room));
+      // Phones: keep the ring wider than tall so it reads as an orbit, not a bob.
+      var ry = small ? Math.min(vr.height * 0.27, rx * 0.95) : vr.height * 0.3;
       var ct = Math.cos(TILT), st = Math.sin(TILT);
 
       items.forEach(function (it) {
         var th = angle + it.a;
         var c = Math.cos(th), sn = Math.sin(th);
         var sc = base * (0.93 + 0.12 * sn);
-        var half = it.half * sc;
-        // keep each card on screen: narrow its ring if it would leave the viewport
-        var rx = Math.max(0, Math.min(Rx, vw - 12 - absCx - half, absCx - 12 - half));
-        var px = rx * c, py = Ry * sn;
+        var px = rx * c, py = ry * sn;
         var x = cx + px * ct - py * st;
         var y = cy + px * st + py * ct;
         var front = sn > 0;
