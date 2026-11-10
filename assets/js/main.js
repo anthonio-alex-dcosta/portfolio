@@ -489,7 +489,7 @@
   /* ---------------------------------------------------------- Contact form */
   var form = $('#contactForm');
   var formDone = $('#formDone');
-  var EMAIL = 'anthonioalexdcosta@gmail.com';
+  var EMAIL = 'alexanthonio05@gmail.com';
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
