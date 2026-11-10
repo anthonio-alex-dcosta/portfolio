@@ -83,6 +83,11 @@
   --bar-filter: blur(16px) saturate(210%) brightness(1.06);
   --bar-tone: saturate(210%) brightness(1.06);
 
+  --photo-grade: saturate(0.82) contrast(1.04) brightness(1);
+  --photo-grade-hover: saturate(0.95) contrast(1.04) brightness(1.02);
+  --photo-tint: rgba(40, 70, 140, 0.08);
+  --photo-fade: rgba(10, 20, 45, 0.28);
+
   --blue: #007aff;
   --green: #28b44b;
   --orange: #ff8a00;
@@ -139,6 +144,11 @@
     0 3px 10px -2px rgba(0, 0, 0, 0.5);
   --bar-filter: blur(16px) saturate(200%) brightness(0.92);
   --bar-tone: saturate(200%) brightness(0.92);
+
+  --photo-grade: saturate(0.78) contrast(1.06) brightness(0.86);
+  --photo-grade-hover: saturate(0.92) contrast(1.06) brightness(0.95);
+  --photo-tint: rgba(20, 40, 100, 0.14);
+  --photo-fade: rgba(0, 4, 16, 0.45);
 
   --blue: #0a84ff;
   --green: #30d158;
@@ -658,8 +668,19 @@ main { display: block; }
 .card-cell--feature .card__media { aspect-ratio: auto; flex: 1; min-height: 320px; }
 .card__media img {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-  transition: transform 1400ms var(--ease-soft);
+  filter: var(--photo-grade);
+  transition: transform 1400ms var(--ease-soft), filter 900ms var(--ease);
 }
+/* One grade for every project photo: a little calmer and cooler, with a soft
+   fall-off at the foot so the six read as one set in either theme. */
+.card__media::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 55%, var(--photo-fade) 100%),
+    var(--photo-tint);
+  mix-blend-mode: normal;
+}
+.card:hover .card__media img { filter: var(--photo-grade-hover); }
 .card:hover .card__media img { transform: scale(1.045); }
 .card__body { display: grid; gap: 6px; padding: 16px 14px 14px; }
 .card__meta { font-size: 0.8125rem; color: var(--ink-2); font-weight: 500; }
@@ -785,6 +806,9 @@ main { display: block; }
 }
 .footer__name { font-family: var(--font-display); font-size: clamp(2rem, 1rem + 4vw, 4.5rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1; }
 .footer__line { color: var(--ink-2); max-width: 46ch; }
+.footer__credits { font-size: 0.8125rem; line-height: 1.5; color: var(--ink-2); max-width: 90ch; margin-top: 28px; }
+.footer__credits a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--sep); text-underline-offset: 2px; transition: text-decoration-color var(--t-fast) var(--ease); }
+.footer__credits a:hover { text-decoration-color: currentColor; }
 .footer__bottom {
   display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   margin-top: 36px; padding-top: 18px;
