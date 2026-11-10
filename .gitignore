@@ -1,0 +1,6 @@
+.DS_Store
+.playwright-cli/
+.taste-skill/
+# old 3D portrait scene, no longer used by the page
+assets/js/scene.js
+assets/vendor/three.module.min.js

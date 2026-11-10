@@ -1,892 +1,405 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="no-js" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio — Anthonio Alex D Costa</title>
-    
-    <!-- Preconnect to CDN for faster loading -->
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://unpkg.com">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Feather Icons -->
-    <script src="https://unpkg.com/feather-icons"></script>
-    
-    <!-- Critical CSS - Prevents flash of unstyled content -->
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: #fafaf9;
-            color: #1c1917;
-            overflow-x: hidden;
-        }
-        
-        html.dark body {
-            background-color: #1c1917;
-            color: #fafaf9;
-        }
-        
-        #hero, nav {
-            opacity: 0;
-            animation: fadeIn 0.3s ease-in forwards;
-        }
-        
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-        
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #fafaf9;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-        
-        html.dark .loading-overlay {
-            background: #1c1917;
-        }
-        
-        .loading-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(120, 113, 108, 0.3);
-            border-top-color: #78716c;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
-    
-    <!-- Apply theme from localStorage immediately -->
-    <script>
-        (function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            }
-        })();
-    </script>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Tailwind Configuration -->
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1c1917',
-                        secondary: '#78716c',
-                        accent: '#e7e5e4',
-                        surface: '#fafaf9',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        display: ['Cal Sans', 'Inter', 'system-ui', 'sans-serif'],
-                    },
-                    letterSpacing: {
-                        tighter: '-0.03em',
-                    },
-                    animation: {
-                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
-                        'bounce-slow': 'bounce 3s infinite',
-                    },
-                    keyframes: {
-                        fadeInUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Anthonio Alex D Costa — Blockchain, Cybersecurity &amp; AI Developer</title>
+  <meta name="description" content="Portfolio of Anthonio Alex D Costa, Computer Science graduate from Brac University specializing in Blockchain, Cybersecurity and AI-driven solutions.">
+  <meta name="theme-color" content="#f2f2f7">
+  <meta property="og:title" content="Anthonio Alex D Costa — Portfolio">
+  <meta property="og:description" content="Computer Science Graduate from Brac University specializing in Blockchain, Cybersecurity, and AI-driven solutions.">
+  <meta property="og:image" content="assets/img/anthonio-portrait.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230a84ff'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' font-family='-apple-system,Helvetica,Arial,sans-serif' font-weight='600' font-size='38' fill='%23fff'%3EA%3C/text%3E%3C/svg%3E">
 
-    <style>
-        .glass-nav {
-            background: rgba(250, 250, 249, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(120, 113, 108, 0.1);
-        }
-        
-        .dark .glass-nav {
-            background: rgba(28, 25, 23, 0.85);
-            border-bottom: 1px solid rgba(120, 113, 108, 0.2);
-        }
+  <!-- Theme before paint: a saved choice wins, otherwise follow the system. -->
+  <script>
+    (function () {
+      var d = document.documentElement;
+      d.classList.remove('no-js');
+      d.classList.add('js');
+      var t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (t !== 'light' && t !== 'dark') t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      d.setAttribute('data-theme', t);
+      // Safety: if the scripts never arrive, still show the hero.
+      setTimeout(function () { d.classList.add('is-ready'); }, 2500);
+    })();
+  </script>
 
-        body, div, section, span, p, h1, h2, h3, a, i, input, textarea, button {
-            transition-property: background-color, border-color, color, fill, stroke;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-            transition-duration: 300ms;
-        }
-        
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        #networkCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-    </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/img/anthonio-portrait.png" imagesrcset="assets/img/anthonio-portrait-768.png 768w, assets/img/anthonio-portrait.png 1086w" imagesizes="(max-width: 760px) 90vw, 46vw" fetchpriority="high">
+  <link rel="stylesheet" href="assets/css/main.css">
 </head>
-<body class="bg-surface text-primary dark:bg-primary dark:text-surface antialiased selection:bg-stone-200 selection:text-primary dark:selection:bg-stone-700 dark:selection:text-surface overflow-x-hidden">
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
+  <!-- The wallpaper the glass sits on: slow drifting light -->
+  <div class="ambient" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+  <!-- ============ NAV: one floating glass bar ============ -->
+  <header class="nav" id="nav">
+    <div class="nav__bar glass">
+      <a class="nav__mark" href="#top" aria-label="Anthonio, back to top">Anthonio</a>
+      <nav class="nav__links" aria-label="Primary" data-lens-group>
+        <span class="lens" aria-hidden="true"></span>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#work">Work</a>
+        <a href="#journey">Journey</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="theme-btn" id="themeToggle" type="button" aria-label="Switch to dark theme">
+        <svg class="icon icon--sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+        <svg class="icon icon--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+      </button>
+      <a class="btn btn--small nav__cta" href="#contact">Get in touch</a>
     </div>
+  </header>
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-24 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+  <!-- Phone: an iOS-style floating tab bar -->
+  <nav class="tabbar glass" id="tabbar" aria-label="Sections" data-lens-group>
+    <span class="lens" aria-hidden="true"></span>
+    <a href="#about"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c.9-3.7 3.9-5.8 7.5-5.8s6.6 2.1 7.5 5.8"/></svg><span>About</span></a>
+    <a href="#skills"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.1 5.4 5.4 2.1-5.4 2.1L12 18.5l-2.1-5.4L4.5 11l5.4-2.1z"/></svg><span>Skills</span></a>
+    <a href="#work"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="7" width="17" height="12.5" rx="3"/><path d="M8.5 7V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2V7"/></svg><span>Work</span></a>
+    <a href="#journey"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.6v4.4c1.6 1.6 3.4 2.4 5.5 2.4s3.9-.8 5.5-2.4v-4.4"/></svg><span>Journey</span></a>
+    <a href="#contact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="3"/><path d="M4 7.5l8 5.5 8-5.5"/></svg><span>Contact</span></a>
+  </nav>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-40 glass-nav transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-            <div class="flex justify-between items-center h-20">
-                <a href="#" class="text-xl font-display font-semibold tracking-tight">
-                    Anthonio<span class="text-secondary">.</span>
-                </a>
-
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="#about" class="text-sm font-medium hover:text-secondary transition-colors">About</a>
-                    <a href="#skills" class="text-sm font-medium hover:text-secondary transition-colors">Skills</a>
-                    <a href="#projects" class="text-sm font-medium hover:text-secondary transition-colors">Projects</a>
-                    
-                    <button id="theme-toggle-desktop" class="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors" aria-label="Toggle Dark Mode">
-                        <i data-feather="moon" class="w-5 h-5 dark:hidden"></i>
-                        <i data-feather="sun" class="w-5 h-5 hidden dark:block text-yellow-300"></i>
-                    </button>
-
-                    <a href="#contact" class="px-5 py-2 bg-primary text-surface dark:bg-surface dark:text-primary text-sm font-medium rounded-full hover:bg-secondary hover:text-white transition-all">Contact Me</a>
-                </div>
-
-                <div class="flex items-center md:hidden gap-4">
-                    <button id="theme-toggle-mobile" class="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors" aria-label="Toggle Dark Mode">
-                        <i data-feather="moon" class="w-5 h-5 dark:hidden"></i>
-                        <i data-feather="sun" class="w-5 h-5 hidden dark:block text-yellow-300"></i>
-                    </button>
-
-                    <button id="mobile-menu-btn" class="text-primary dark:text-surface hover:text-secondary">
-                        <i data-feather="menu"></i>
-                    </button>
-                </div>
-            </div>
+  <main id="main">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="top" aria-labelledby="heroTitle">
+      <div class="hero__copy">
+        <h1 class="hero__title" id="heroTitle">
+          <span class="hero__line" data-hero style="--i:0">Anthonio</span>
+          <span class="hero__line hero__line--2" data-hero style="--i:1">Alex D Costa</span>
+        </h1>
+        <p class="hero__lede" data-hero style="--i:2">Computer Science graduate from Brac University, building secure software with blockchain, cybersecurity and AI.</p>
+        <div class="hero__actions" data-hero style="--i:3">
+          <a class="btn" href="#work">View projects</a>
+          <a class="btn btn--glass glass" href="#contact">Get in touch</a>
         </div>
-        
-        <div id="mobile-menu" class="hidden md:hidden bg-surface dark:bg-primary border-b border-stone-200 dark:border-stone-800 absolute w-full left-0 top-20 shadow-lg">
-            <div class="flex flex-col p-6 space-y-4">
-                <a href="#about" class="text-sm font-medium hover:text-secondary mobile-link">About</a>
-                <a href="#skills" class="text-sm font-medium hover:text-secondary mobile-link">Skills</a>
-                <a href="#projects" class="text-sm font-medium hover:text-secondary mobile-link">Projects</a>
-                <a href="#contact" class="text-sm font-medium hover:text-secondary mobile-link">Contact</a>
+      </div>
+
+      <div class="hero__visual" id="heroVisual">
+        <div class="hero__orb glass" data-depth="0.12" aria-hidden="true"></div>
+        <figure class="portrait" data-depth="0.05">
+          <img src="assets/img/anthonio-portrait.png" srcset="assets/img/anthonio-portrait-768.png 768w, assets/img/anthonio-portrait.png 1086w" sizes="(max-width: 760px) 90vw, 46vw" alt="Portrait of Anthonio Alex D Costa in a navy suit and light blue shirt" width="1086" height="1448" decoding="async" fetchpriority="high">
+        </figure>
+
+        <div class="widget-wrap widget-wrap--1">
+          <div class="widget glass" style="--i:0">
+            <span class="status-dot" aria-hidden="true"></span>
+            <div>
+              <p class="widget__title">Open for freelance</p>
+              <p class="widget__sub">Full stack developer</p>
             </div>
+          </div>
         </div>
-    </nav>
-
-    <main>
-        <!-- Hero Section -->
-        <section id="hero" class="min-h-screen flex items-center pt-20 pb-12 px-6 md:px-12 lg:px-24 relative overflow-hidden">
-            <canvas id="networkCanvas"></canvas>
-
-            <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-                <div class="lg:col-span-7 space-y-8 reveal active">
-                    <div class="space-y-4">
-                        <p class="text-secondary text-sm uppercase tracking-widest font-medium">Portfolio 2025</p>
-                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-semibold tracking-tighter leading-[0.9]">
-                            Anthonio<br>
-                            <span class="text-secondary">Alex D Costa</span>
-                        </h1>
-                    </div>
-                    <p class="text-lg md:text-xl text-secondary max-w-md leading-relaxed font-light">
-                        Computer Science Graduate from Brac University specializing in Blockchain, Cybersecurity, and AI-driven solutions.
-                    </p>
-                    <div class="flex items-center gap-6 pt-4">
-                        <a href="#projects" class="group relative px-8 py-4 bg-primary text-surface dark:bg-surface dark:text-primary rounded-full overflow-hidden transition-all duration-300 hover:shadow-2xl">
-                            <span class="relative z-10 font-medium">View Projects</span>
-                            <div class="absolute inset-0 bg-secondary transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
-                        </a>
-                        <a href="#contact" class="text-primary dark:text-surface font-medium hover:text-secondary transition-colors duration-300 flex items-center gap-2 group">
-                            Contact
-                            <i data-feather="arrow-right" class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="lg:col-span-5 relative reveal delay-200">
-                    <div class="aspect-[4/5] rounded-2xl overflow-hidden bg-stone-200 dark:bg-stone-700 shadow-2xl">
-                        <img src="https://lh3.googleusercontent.com/d/1WMgXMbGzrB2wc-E0HTzuxUgAQH6_tAWZ" alt="Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700">
-                    </div>
-                    <div class="absolute -bottom-6 -left-6 bg-white/90 dark:bg-stone-800/90 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-stone-100 dark:border-stone-700 hidden md:block animate-bounce-slow">
-                        <p class="text-xl font-bold text-primary dark:text-surface">Full Stack</p>
-                        <p class="text-secondary dark:text-stone-400 text-sm">Developer</p>
-                    </div>
-                </div>
+        <div class="widget-wrap widget-wrap--2">
+          <div class="widget widget--grade glass" style="--i:1">
+            <svg class="mini-ring" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="18"/><circle class="mini-ring__bar" cx="22" cy="22" r="18" pathLength="100" style="--v:95"/></svg>
+            <div>
+              <p class="widget__title">3.80 CGPA</p>
+              <p class="widget__sub">BSc CSE, Brac University</p>
             </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="py-24 px-6 md:px-12 lg:px-24 bg-white dark:bg-stone-900 relative">
-            <div class="absolute left-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-stone-200 dark:bg-stone-800 rounded-full blur-[100px] -z-10"></div>
-
-            <div class="max-w-7xl mx-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                    <div class="lg:col-span-4 reveal">
-                        <div class="sticky top-32">
-                            <h2 class="text-sm uppercase tracking-widest text-secondary dark:text-stone-400 font-bold mb-4">About</h2>
-                            <p class="text-3xl md:text-4xl font-display font-bold tracking-tight leading-tight">
-                                Bridging the gap between theoretical research and practical implementation.
-                            </p>
-                            <div class="mt-8 pt-8 border-t border-stone-200 dark:border-stone-800">
-                                <p class="text-secondary dark:text-stone-400 leading-relaxed">
-                                    I am passionate about solving complex problems through code. My academic background in Computer Science at Brac University has equipped me with a deep understanding of algorithms, data structures, and emerging technologies.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="p-6 rounded-2xl bg-surface dark:bg-stone-800 border border-stone-200 dark:border-stone-700 reveal delay-100 hover:border-secondary dark:hover:border-stone-500 transition-colors group">
-                            <div class="w-12 h-12 rounded-xl bg-white dark:bg-stone-700 flex items-center justify-center border border-stone-100 dark:border-stone-600 text-primary dark:text-surface mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                                <i data-feather="award"></i>
-                            </div>
-                            <h3 class="font-bold text-lg mb-4">Education</h3>
-                            <ul class="space-y-3 text-secondary dark:text-stone-400 text-sm">
-                                <li><strong>BS CSE</strong> — Brac University<br>CGPA: 3.80/4.00 (2022-2025)</li>
-                                <li><strong>HSC</strong> — Govt. M. M. City College<br>GPA: 5.00/5.00 (2018-2020)</li>
-                                <li><strong>SSC</strong> — Saint Joseph's High School<br>GPA: 5.00/5.00 (2008-2018)</li>
-                            </ul>
-                        </div>
-                        <div class="p-6 rounded-2xl bg-surface dark:bg-stone-800 border border-stone-200 dark:border-stone-700 reveal delay-200 hover:border-secondary dark:hover:border-stone-500 transition-colors group">
-                            <div class="w-12 h-12 rounded-xl bg-white dark:bg-stone-700 flex items-center justify-center border border-stone-100 dark:border-stone-600 text-primary dark:text-surface mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                                <i data-feather="briefcase"></i>
-                            </div>
-                            <h3 class="font-bold text-lg mb-4">Experience</h3>
-                            <ul class="space-y-3 text-secondary dark:text-stone-400 text-sm">
-                                <li><strong>Student Tutor</strong> — Brac University<br>Jan 2024 – Dec 2025</li>
-                                <li class="text-xs mt-1 text-stone-400 dark:text-stone-500">CSE111: Programming Languages II<br>CSE220: Data Structures<br>CSE221: Algorithms</li>
-                            </ul>
-                        </div>
-                        <div class="p-6 rounded-2xl bg-surface dark:bg-stone-800 border border-stone-200 dark:border-stone-700 reveal delay-300 hover:border-secondary dark:hover:border-stone-500 transition-colors group">
-                            <div class="w-12 h-12 rounded-xl bg-white dark:bg-stone-700 flex items-center justify-center border border-stone-100 dark:border-stone-600 text-primary dark:text-surface mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm">
-                                <i data-feather="cpu"></i>
-                            </div>
-                            <h3 class="font-bold text-lg mb-4">Research Interests</h3>
-                            <ul class="space-y-2 text-secondary dark:text-stone-400 text-sm">
-                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-secondary rounded-full"></span>Blockchain</li>
-                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-secondary rounded-full"></span>Cybersecurity & Forensics</li>
-                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-secondary rounded-full"></span>AI & Ethical AI</li>
-                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-secondary rounded-full"></span>Privacy-Preserving ML</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Skills Section -->
-        <section id="skills" class="py-24 px-6 md:px-12 lg:px-24 bg-surface dark:bg-primary">
-            <div class="max-w-7xl mx-auto">
-                <div class="max-w-2xl mb-16 reveal">
-                    <h2 class="text-sm uppercase tracking-widest text-secondary dark:text-stone-400 font-medium mb-4">Skills</h2>
-                    <p class="text-3xl md:text-4xl font-display font-semibold tracking-tight">
-                        Tools and technologies I use to bring ideas to life.
-                    </p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <div class="space-y-8 reveal delay-100">
-                        <h3 class="font-medium text-lg border-b border-stone-200 dark:border-stone-700 pb-4">Technical Skills</h3>
-                        <div class="space-y-6">
-                            <div>
-                                <h4 class="font-medium text-sm text-secondary dark:text-stone-400 mb-3">Programming Languages</h4>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Python</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">JavaScript</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">C/C++</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Java</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Solidity</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">x86 Assembly</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-sm text-secondary dark:text-stone-400 mb-3">Web & Blockchain</h4>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">React.js</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Node.js</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Web3.js</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">FastAPI</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Django</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 class="font-medium text-sm text-secondary dark:text-stone-400 mb-3">Databases & Tools</h4>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">MySQL</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">MongoDB</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Git</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary transition-colors cursor-default">Docker</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-8 reveal delay-200">
-                        <h3 class="font-medium text-lg border-b border-stone-200 dark:border-stone-700 pb-4">Professional Skills</h3>
-                        <div class="flex flex-wrap gap-3">
-                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Technical Mentorship</span>
-                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Leadership</span>
-                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Event Coordination</span>
-                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Public Speaking</span>
-                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Critical Thinking</span>
-                            <span class="px-4 py-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-full text-sm hover:border-primary hover:bg-primary hover:text-surface dark:hover:bg-surface dark:hover:text-primary transition-all cursor-default">Team Collaboration</span>
-                        </div>
-                        
-                        <div class="mt-12 p-6 bg-white dark:bg-stone-800 rounded-xl border border-stone-100 dark:border-stone-700">
-                            <h4 class="text-sm font-medium text-secondary dark:text-stone-400 mb-4">Core Focus</h4>
-                            <div class="space-y-3">
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1">
-                                        <span>Blockchain</span>
-                                        <span>85%</span>
-                                    </div>
-                                    <div class="h-2 bg-stone-100 dark:bg-stone-900 rounded-full overflow-hidden">
-                                        <div class="h-full bg-primary dark:bg-surface w-[85%] rounded-full"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1">
-                                        <span>AI / ML</span>
-                                        <span>70%</span>
-                                    </div>
-                                    <div class="h-2 bg-stone-100 dark:bg-stone-900 rounded-full overflow-hidden">
-                                        <div class="h-full bg-secondary dark:bg-stone-500 w-[70%] rounded-full"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-xs mb-1">
-                                        <span>Cybersecurity</span>
-                                        <span>90%</span>
-                                    </div>
-                                    <div class="h-2 bg-stone-100 dark:bg-stone-900 rounded-full overflow-hidden">
-                                        <div class="h-full bg-primary dark:bg-surface w-[90%] rounded-full"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Projects Section -->
-        <section id="projects" class="py-24 px-6 md:px-12 lg:px-24 bg-white dark:bg-stone-900">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6 reveal">
-                    <div>
-                        <h2 class="text-sm uppercase tracking-widest text-secondary dark:text-stone-400 font-medium mb-4">Selected Work</h2>
-                        <p class="text-3xl md:text-4xl font-display font-semibold tracking-tight">
-                            Featured Projects
-                        </p>
-                    </div>
-                    <a href="https://github.com/anthonio-alex-dcosta" target="_blank" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors flex items-center gap-2 group">
-                        View All Projects
-                        <i data-feather="arrow-up-right" class="w-4 h-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
-                    </a>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    
-                    <!-- Project 1: Metaverse -->
-                    <a href="https://github.com/AFK-Swap/SSI_Metaverse.git" target="_blank" class="group block relative reveal delay-100">
-                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
-                            <img src="https://www.shutterstock.com/image-photo/futuristic-biometric-authentication-technology-concept-600nw-2495179419.jpg" alt="Biometric Authentication" class="w-full h-full object-cover grayscale transform group-hover:scale-105 transition-all duration-700 hover:grayscale-0">
-                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
-                                <span>Blockchain</span>
-                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
-                                <span>2025</span>
-                            </div>
-                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">Decentralized Metaverse ID</h3>
-                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A secure, decentralized SSI-based authenticator for Metaverse using blockchain.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 2: StoryGram -->
-                    <a href="https://github.com/anthonio-alex-dcosta/StoryGram.git" target="_blank" class="group block relative reveal delay-200 md:mt-24">
-                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
-                            <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Library Books" class="w-full h-full object-cover grayscale transform group-hover:scale-105 transition-all duration-700 hover:grayscale-0">
-                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
-                                <span>Web App</span>
-                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
-                                <span>2023</span>
-                            </div>
-                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">StoryGram: Social Books</h3>
-                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A React & Node.js platform connecting book lovers with lending, reviews, and AI-generated stories.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 3: Missing Persons -->
-                    <a href="https://github.com/anthonio-alex-dcosta/Missing-persons-dapp.git" target="_blank" class="group block relative reveal delay-100">
-                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
-                            <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blockchain Network" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
-                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
-                                <span>Blockchain</span>
-                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
-                                <span>2024</span>
-                            </div>
-                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">Missing Persons Tracker</h3>
-                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A transparent blockchain DApp for tracking missing persons with role-based access control.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 4: Foodzilla -->
-                    <a href="https://github.com/anthonio-alex-dcosta/Express-react-app.git" target="_blank" class="group block relative reveal delay-200 md:mt-24">
-                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
-                            <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Gourmet Restaurant" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
-                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
-                                <span>MERN Stack</span>
-                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
-                                <span>2025</span>
-                            </div>
-                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">Foodzilla: Online Bistro</h3>
-                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A scalable MERN stack restaurant app featuring a React frontend and Express API backend.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 5: Movie Ticket -->
-                    <a href="https://github.com/anthonio-alex-dcosta/Movie-Ticket-Service.git" target="_blank" class="group block relative reveal delay-100">
-                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
-                            <img src="https://static.gvwire.com/wp-content/uploads/2024/03/16164309/movie-theater-1.jpg" alt="Movie Theater" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
-                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
-                                <span>Web App</span>
-                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
-                                <span>2022</span>
-                            </div>
-                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">Cinema Ticket Service</h3>
-                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A Flask and MySQL movie booking platform with secure payments and fan club features.</p>
-                        </div>
-                    </a>
-
-                    <!-- Project 6: Unit Converter -->
-                    <a href="https://github.com/anthonio-alex-dcosta/Unit_ConV.git" target="_blank" class="group block relative reveal delay-200 md:mt-24">
-                        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800 mb-6 relative">
-                            <img src="https://www.easyfreetools.com/wp-content/uploads/2024/07/mastering-diy-projects-wi-33-768x403.jpg" alt="Weighing Scale" class="w-full h-full object-cover transform group-hover:scale-105 grayscale hover:grayscale-0 transition-all duration-700">
-                            <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300"></div>
-                        </div>
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3 text-sm text-secondary dark:text-stone-400">
-                                <span>Assembly</span>
-                                <span class="w-1 h-1 rounded-full bg-secondary"></span>
-                                <span>2022</span>
-                            </div>
-                            <h3 class="text-xl font-semibold group-hover:text-secondary dark:group-hover:text-stone-300 transition-colors">DOS Unit Converter</h3>
-                            <p class="text-secondary dark:text-stone-400 text-sm leading-relaxed">A low-level x86 Assembly text-based tool for converting measurements via system interrupts.</p>
-                        </div>
-                    </a>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- Hobbies & Interests -->
-        <section id="hobbies" class="py-24 px-6 md:px-12 lg:px-24 bg-surface dark:bg-primary">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center max-w-2xl mx-auto mb-16 reveal">
-                    <h2 class="text-sm uppercase tracking-widest text-secondary dark:text-stone-400 font-medium mb-4">Beyond Work</h2>
-                    <p class="text-3xl md:text-4xl font-display font-semibold tracking-tight">
-                        Interests & Passions
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white dark:bg-stone-800 p-8 rounded-2xl border border-stone-100 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-colors group text-center reveal delay-100 cursor-default hover:-translate-y-2 duration-300">
-                        <i data-feather="aperture" class="w-8 h-8 mx-auto mb-4 text-secondary group-hover:text-primary dark:group-hover:text-surface transition-colors"></i>
-                        <h3 class="font-medium">Photography</h3>
-                    </div>
-                    <div class="bg-white dark:bg-stone-800 p-8 rounded-2xl border border-stone-100 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-colors group text-center reveal delay-200 cursor-default hover:-translate-y-2 duration-300">
-                        <i data-feather="map" class="w-8 h-8 mx-auto mb-4 text-secondary group-hover:text-primary dark:group-hover:text-surface transition-colors"></i>
-                        <h3 class="font-medium">Travel</h3>
-                    </div>
-                    <div class="bg-white dark:bg-stone-800 p-8 rounded-2xl border border-stone-100 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-colors group text-center reveal delay-300 cursor-default hover:-translate-y-2 duration-300">
-                        <i data-feather="coffee" class="w-8 h-8 mx-auto mb-4 text-secondary group-hover:text-primary dark:group-hover:text-surface transition-colors"></i>
-                        <h3 class="font-medium">Typography</h3>
-                    </div>
-                    <div class="bg-white dark:bg-stone-800 p-8 rounded-2xl border border-stone-100 dark:border-stone-700 hover:border-stone-300 dark:hover:border-stone-600 transition-colors group text-center reveal delay-400 cursor-default hover:-translate-y-2 duration-300">
-                        <i data-feather="music" class="w-8 h-8 mx-auto mb-4 text-secondary group-hover:text-primary dark:group-hover:text-surface transition-colors"></i>
-                        <h3 class="font-medium">Jazz</h3>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="py-24 px-6 md:px-12 lg:px-24 bg-primary text-white dark:bg-white dark:text-primary relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-96 h-96 bg-secondary opacity-5 dark:opacity-10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
-
-            <div class="max-w-4xl mx-auto relative z-10">
-                <div class="text-center mb-16 reveal">
-                    <h2 class="text-sm uppercase tracking-widest text-stone-400 dark:text-stone-500 font-medium mb-4">Contact</h2>
-                    <p class="text-3xl md:text-5xl font-display font-semibold tracking-tight mb-6">
-                        Let's create something together.
-                    </p>
-                    <p class="text-stone-400 dark:text-stone-500 text-lg">Open for freelance projects and collaborations.</p>
-                </div>
-
-                <form id="contactForm" class="space-y-6 max-w-xl mx-auto reveal delay-100">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-2">
-                            <label for="name" class="text-sm font-medium text-stone-300 dark:text-stone-600">Name</label>
-                            <input type="text" id="name" required class="w-full px-4 py-3 bg-stone-800 dark:bg-stone-100 border border-stone-700 dark:border-stone-300 rounded-lg focus:outline-none focus:border-stone-500 text-white dark:text-primary placeholder-stone-500 dark:placeholder-stone-400 transition-colors" placeholder="John Doe">
-                        </div>
-                        <div class="space-y-2">
-                            <label for="email" class="text-sm font-medium text-stone-300 dark:text-stone-600">Email</label>
-                            <input type="email" id="email" required class="w-full px-4 py-3 bg-stone-800 dark:bg-stone-100 border border-stone-700 dark:border-stone-300 rounded-lg focus:outline-none focus:border-stone-500 text-white dark:text-primary placeholder-stone-500 dark:placeholder-stone-400 transition-colors" placeholder="john@example.com">
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        <label for="message" class="text-sm font-medium text-stone-300 dark:text-stone-600">Message</label>
-                        <textarea id="message" rows="5" required class="w-full px-4 py-3 bg-stone-800 dark:bg-stone-100 border border-stone-700 dark:border-stone-300 rounded-lg focus:outline-none focus:border-stone-500 text-white dark:text-primary placeholder-stone-500 dark:placeholder-stone-400 transition-colors resize-none" placeholder="Tell me about your project..."></textarea>
-                    </div>
-                    <button type="submit" class="w-full py-4 bg-white dark:bg-primary text-primary dark:text-surface rounded-lg font-medium hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors duration-300 flex items-center justify-center gap-2 group">
-                        <span>Send Message</span>
-                        <i data-feather="send" class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"></i>
-                    </button>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-surface dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 pt-16 pb-8">
-        <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-24">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-                <div>
-                    <a href="#" class="text-2xl font-display font-semibold tracking-tight">
-                        Anthonio<span class="text-secondary">.</span>
-                    </a>
-                    <p class="text-sm text-secondary dark:text-stone-400 mt-2 max-w-xs">
-                        Building secure, intelligent, and user-friendly digital experiences.
-                    </p>
-                </div>
-                <div class="flex gap-6">
-                    <a href="https://github.com/anthonio-alex-dcosta" target="_blank" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
-                        <i data-feather="github" class="w-5 h-5"></i>
-                    </a>
-                    <a href="https://www.linkedin.com/in/anthonio-alex-d-costa-515aba373/" target="_blank" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
-                        <i data-feather="linkedin" class="w-5 h-5"></i>
-                    </a>
-                    <a href="https://x.com/Axel22101749" target="_blank" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
-                        <i data-feather="twitter" class="w-5 h-5"></i>
-                    </a>
-                    <a href="mailto:anthonioalexdcosta@gmail.com" class="text-secondary dark:text-stone-400 hover:text-primary dark:hover:text-surface transition-colors">
-                        <i data-feather="mail" class="w-5 h-5"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="border-t border-stone-200 dark:border-stone-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-xs text-secondary dark:text-stone-400">© 2025 Anthonio Alex D Costa. All rights reserved.</p>
-                <div class="flex gap-6 text-xs text-secondary dark:text-stone-400">
-                    <a href="#" class="hover:text-primary dark:hover:text-surface">Privacy Policy</a>
-                    <a href="#" class="hover:text-primary dark:hover:text-surface">Terms of Service</a>
-                </div>
-            </div>
+          </div>
         </div>
-    </footer>
+        <div class="widget-wrap widget-wrap--3">
+          <div class="widget widget--focus glass" style="--i:2">
+            <p class="widget__title">Focus</p>
+            <ul class="tags">
+              <li><span class="dot dot--blue"></span>Blockchain</li>
+              <li><span class="dot dot--green"></span>Security</li>
+              <li><span class="dot dot--orange"></span>AI</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <script>
-        // --- 0. Hide loading overlay once page is ready ---
-        window.addEventListener('load', () => {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            setTimeout(() => {
-                loadingOverlay.classList.add('hidden');
-            }, 300);
-        });
+    <!-- ============ ABOUT: a home screen of widgets ============ -->
+    <section class="section about" id="about" aria-labelledby="aboutTitle">
+      <div class="section__head" data-reveal>
+        <h2 class="section__title" id="aboutTitle">About</h2>
+        <p class="section__lede">Bridging the gap between theoretical research and practical implementation.</p>
+      </div>
 
-        // --- 1. Theme Toggle Logic ---
-        const themeToggleDesktop = document.getElementById('theme-toggle-desktop');
-        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
-        const htmlElement = document.documentElement;
+      <div class="bento" data-stagger>
+        <article class="tile tile--statement glass" data-reveal="pop">
+          <p class="tile__big">I am passionate about solving complex problems through code.</p>
+          <p class="tile__text">My academic background in Computer Science at Brac University has equipped me with a deep understanding of algorithms, data structures, and emerging technologies.</p>
+        </article>
 
-        // Already applied in head, but check again for safety
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            htmlElement.classList.add('dark');
-        } else {
-            htmlElement.classList.remove('dark');
-        }
+        <article class="tile tile--research glass" data-reveal="pop">
+          <h3 class="tile__title">Research interests</h3>
+          <ul class="research">
+            <li><span class="app-dot app-dot--blue" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/><path d="M11 7.5h3.5a2 2 0 0 1 2 2V13"/></svg></span>Blockchain</li>
+            <li><span class="app-dot app-dot--green" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5l7 2.7v5.2c0 4.3-2.9 7.8-7 9.1-4.1-1.3-7-4.8-7-9.1V6.2z"/></svg></span>Cybersecurity &amp; Forensics</li>
+            <li><span class="app-dot app-dot--orange" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5l2.1 5.4 5.4 2.1-5.4 2.1L12 18.5l-2.1-5.4L4.5 11l5.4-2.1z"/></svg></span>AI &amp; Ethical AI</li>
+            <li><span class="app-dot app-dot--pink" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg></span>Privacy-Preserving ML</li>
+          </ul>
+        </article>
 
-        function toggleTheme() {
-            if (htmlElement.classList.contains('dark')) {
-                htmlElement.classList.remove('dark');
-                localStorage.theme = 'light';
-            } else {
-                htmlElement.classList.add('dark');
-                localStorage.theme = 'dark';
-            }
-            feather.replace();
-        }
+        <article class="tile tile--stat glass" data-reveal="pop">
+          <p class="tile__num"><span data-count="3.80" data-decimals="2">3.80</span></p>
+          <p class="tile__text">CGPA out of 4.00, BSc in Computer Science &amp; Engineering</p>
+        </article>
 
-        themeToggleDesktop.addEventListener('click', toggleTheme);
-        themeToggleMobile.addEventListener('click', toggleTheme);
+        <article class="tile tile--tutor glass" data-reveal="pop">
+          <h3 class="tile__title">Student Tutor</h3>
+          <p class="tile__text">Brac University, Jan 2024 – Dec 2025</p>
+          <ul class="chips">
+            <li>CSE111</li><li>CSE220</li><li>CSE221</li>
+          </ul>
+        </article>
+      </div>
+    </section>
 
-        // --- 2. Initialize Feather Icons ---
-        feather.replace();
+    <!-- ============ SKILLS: activity rings + segmented control ============ -->
+    <section class="section skills" id="skills" aria-labelledby="skillsTitle">
+      <div class="section__head" data-reveal>
+        <h2 class="section__title" id="skillsTitle">Skills</h2>
+        <p class="section__lede">The tools I bring ideas to life with.</p>
+      </div>
 
-        // --- 3. Navigation Logic ---
-        const navbar = document.getElementById('navbar');
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
+      <div class="skills__grid">
+        <div class="focus glass" data-reveal="pop" aria-labelledby="focusTitle">
+          <h3 class="tile__title" id="focusTitle">Core focus</h3>
+          <div class="focus__body">
+            <svg class="rings" viewBox="0 0 200 200" role="img" aria-label="Cybersecurity 90 percent, Blockchain 85 percent, AI and ML 70 percent">
+              <g class="ring ring--blue"><circle cx="100" cy="100" r="86"/><circle class="ring__bar" cx="100" cy="100" r="86" pathLength="100" style="--v:90"/></g>
+              <g class="ring ring--green"><circle cx="100" cy="100" r="64"/><circle class="ring__bar" cx="100" cy="100" r="64" pathLength="100" style="--v:85"/></g>
+              <g class="ring ring--orange"><circle cx="100" cy="100" r="42"/><circle class="ring__bar" cx="100" cy="100" r="42" pathLength="100" style="--v:70"/></g>
+            </svg>
+            <dl class="focus__list">
+              <div class="focus__row focus__row--blue">
+                <dt><span class="focus__name">Cybersecurity</span> <span class="focus__pct"><span data-count="90">90</span>%</span></dt>
+                <dd>Forensics, threat analysis and systems that hold up under attack.</dd>
+              </div>
+              <div class="focus__row focus__row--green">
+                <dt><span class="focus__name">Blockchain</span> <span class="focus__pct"><span data-count="85">85</span>%</span></dt>
+                <dd>Smart contracts in Solidity and decentralized identity.</dd>
+              </div>
+              <div class="focus__row focus__row--orange">
+                <dt><span class="focus__name">AI &amp; ML</span> <span class="focus__pct"><span data-count="70">70</span>%</span></dt>
+                <dd>Ethical and privacy-preserving models.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
 
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('shadow-sm');
-            } else {
-                navbar.classList.remove('shadow-sm');
-            }
-        });
+        <div class="toolbox glass" data-reveal="pop">
+          <div class="segmented" role="tablist" aria-label="Skill groups" data-lens-group>
+            <span class="lens" aria-hidden="true"></span>
+            <button role="tab" id="tab-lang" aria-controls="panel-lang" aria-selected="true" type="button">Code</button>
+            <button role="tab" id="tab-web" aria-controls="panel-web" aria-selected="false" tabindex="-1" type="button">Web</button>
+            <button role="tab" id="tab-data" aria-controls="panel-data" aria-selected="false" tabindex="-1" type="button">Data</button>
+            <button role="tab" id="tab-soft" aria-controls="panel-soft" aria-selected="false" tabindex="-1" type="button">People</button>
+          </div>
+          <div class="panels">
+            <div class="panel is-active" role="tabpanel" id="panel-lang" aria-labelledby="tab-lang">
+              <h3 class="panel__title">Programming languages</h3>
+              <ul class="pills"><li>Python</li><li>JavaScript</li><li>C/C++</li><li>Java</li><li>Solidity</li><li>x86 Assembly</li></ul>
+            </div>
+            <div class="panel" role="tabpanel" id="panel-web" aria-labelledby="tab-web">
+              <h3 class="panel__title">Web &amp; blockchain</h3>
+              <ul class="pills"><li>React.js</li><li>Node.js</li><li>Web3.js</li><li>FastAPI</li><li>Django</li></ul>
+            </div>
+            <div class="panel" role="tabpanel" id="panel-data" aria-labelledby="tab-data">
+              <h3 class="panel__title">Databases &amp; tools</h3>
+              <ul class="pills"><li>MySQL</li><li>MongoDB</li><li>Git</li><li>Docker</li></ul>
+            </div>
+            <div class="panel" role="tabpanel" id="panel-soft" aria-labelledby="tab-soft">
+              <h3 class="panel__title">Professional skills</h3>
+              <ul class="pills"><li>Technical Mentorship</li><li>Leadership</li><li>Event Coordination</li><li>Public Speaking</li><li>Critical Thinking</li><li>Team Collaboration</li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            const icon = mobileMenuBtn.querySelector('i');
-            if (mobileMenu.classList.contains('hidden')) {
-                icon.setAttribute('data-feather', 'menu');
-            } else {
-                icon.setAttribute('data-feather', 'x');
-            }
-            feather.replace();
-        });
+    <!-- ============ WORK: glass cards ============ -->
+    <section class="section work" id="work" aria-labelledby="workTitle">
+      <div class="section__head section__head--row" data-reveal>
+        <div>
+          <h2 class="section__title" id="workTitle">Selected work</h2>
+          <p class="section__lede">Six of many. The rest live on GitHub.</p>
+        </div>
+        <a class="btn btn--glass btn--small glass" href="https://github.com/anthonio-alex-dcosta" target="_blank" rel="noopener">All projects <span aria-hidden="true">&nearr;</span></a>
+      </div>
 
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
+      <ul class="cards" data-stagger>
+        <li class="card-cell card-cell--feature" data-reveal="pop"><a class="card glass" href="https://github.com/AFK-Swap/SSI_Metaverse.git" target="_blank" rel="noopener">
+          <span class="card__media"><img src="assets/img/projects/metaverse-id.jpg" alt="" width="1200" height="896" loading="lazy" decoding="async"></span>
+          <span class="card__body">
+            <span class="card__meta">Blockchain · 2025</span>
+            <span class="card__name">Metaverse ID</span>
+            <span class="card__desc">A secure, decentralized SSI-based authenticator for Metaverse using blockchain.</span>
+          </span>
+        </a></li>
+        <li class="card-cell" data-reveal="pop"><a class="card glass" href="https://github.com/anthonio-alex-dcosta/StoryGram.git" target="_blank" rel="noopener">
+          <span class="card__media"><img src="assets/img/projects/storygram.jpg" alt="" width="1200" height="896" loading="lazy" decoding="async"></span>
+          <span class="card__body">
+            <span class="card__meta">Web app · 2023</span>
+            <span class="card__name">StoryGram</span>
+            <span class="card__desc">A React &amp; Node.js platform connecting book lovers with lending, reviews, and AI-generated stories.</span>
+          </span>
+        </a></li>
+        <li class="card-cell" data-reveal="pop"><a class="card glass" href="https://github.com/anthonio-alex-dcosta/Missing-persons-dapp.git" target="_blank" rel="noopener">
+          <span class="card__media"><img src="assets/img/projects/missing-persons.jpg" alt="" width="1200" height="896" loading="lazy" decoding="async"></span>
+          <span class="card__body">
+            <span class="card__meta">Blockchain · 2024</span>
+            <span class="card__name">Missing Persons Tracker</span>
+            <span class="card__desc">A transparent blockchain DApp for tracking missing persons with role-based access control.</span>
+          </span>
+        </a></li>
+        <li class="card-cell" data-reveal="pop"><a class="card glass" href="https://github.com/anthonio-alex-dcosta/Express-react-app.git" target="_blank" rel="noopener">
+          <span class="card__media"><img src="assets/img/projects/foodzilla.jpg" alt="" width="1200" height="896" loading="lazy" decoding="async"></span>
+          <span class="card__body">
+            <span class="card__meta">MERN stack · 2025</span>
+            <span class="card__name">Foodzilla</span>
+            <span class="card__desc">A scalable MERN stack restaurant app featuring a React frontend and Express API backend.</span>
+          </span>
+        </a></li>
+        <li class="card-cell" data-reveal="pop"><a class="card glass" href="https://github.com/anthonio-alex-dcosta/Movie-Ticket-Service.git" target="_blank" rel="noopener">
+          <span class="card__media"><img src="assets/img/projects/cinema-ticket.jpg" alt="" width="1200" height="896" loading="lazy" decoding="async"></span>
+          <span class="card__body">
+            <span class="card__meta">Web app · 2022</span>
+            <span class="card__name">Cinema Ticket Service</span>
+            <span class="card__desc">A Flask and MySQL movie booking platform with secure payments and fan club features.</span>
+          </span>
+        </a></li>
+        <li class="card-cell" data-reveal="pop"><a class="card glass" href="https://github.com/anthonio-alex-dcosta/Unit_ConV.git" target="_blank" rel="noopener">
+          <span class="card__media"><img src="assets/img/projects/dos-converter.jpg" alt="" width="1200" height="896" loading="lazy" decoding="async"></span>
+          <span class="card__body">
+            <span class="card__meta">Assembly · 2022</span>
+            <span class="card__name">DOS Unit Converter</span>
+            <span class="card__desc">A low-level x86 Assembly text-based tool for converting measurements via system interrupts.</span>
+          </span>
+        </a></li>
+      </ul>
+    </section>
 
-        // --- 4. Scroll Reveal Animation ---
-        const revealElements = document.querySelectorAll('.reveal');
-        
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, {
-            root: null,
-            threshold: 0.15,
-            rootMargin: "0px"
-        });
+    <!-- ============ JOURNEY: an inset grouped list ============ -->
+    <section class="section journey" id="journey" aria-labelledby="journeyTitle">
+      <div class="section__head" data-reveal>
+        <h2 class="section__title" id="journeyTitle">Journey so far</h2>
+        <p class="section__lede">Ten years at Saint Joseph's, two at Govt. M. M. City College, and a CSE degree at Brac University, where I also taught.</p>
+      </div>
 
-        revealElements.forEach(el => revealObserver.observe(el));
+      <ol class="group glass" data-reveal="pop" data-stagger>
+        <li class="row" data-reveal>
+          <span class="app-dot app-dot--blue" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="7" width="17" height="12.5" rx="3"/><path d="M8.5 7V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2V7"/></svg></span>
+          <div class="row__main">
+            <h3 class="row__title">Student Tutor</h3>
+            <p class="row__sub">Brac University · CSE111, CSE220, CSE221</p>
+          </div>
+          <p class="row__side"><span class="row__when">Jan 2024 – Dec 2025</span></p>
+        </li>
+        <li class="row" data-reveal>
+          <span class="app-dot app-dot--green" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.6v4.4c1.6 1.6 3.4 2.4 5.5 2.4s3.9-.8 5.5-2.4v-4.4"/></svg></span>
+          <div class="row__main">
+            <h3 class="row__title">BS in Computer Science &amp; Engineering</h3>
+            <p class="row__sub">Brac University</p>
+          </div>
+          <p class="row__side"><span class="row__score">3.80<small> / 4.00</small></span><span class="row__when">2022 – 2025</span></p>
+        </li>
+        <li class="row" data-reveal>
+          <span class="app-dot app-dot--orange" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h10.5a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M5 16.5a3 3 0 0 1 3-3h10.5"/></svg></span>
+          <div class="row__main">
+            <h3 class="row__title">Higher Secondary Certificate</h3>
+            <p class="row__sub">Govt. M. M. City College</p>
+          </div>
+          <p class="row__side"><span class="row__score">5.00<small> / 5.00</small></span><span class="row__when">2018 – 2020</span></p>
+        </li>
+        <li class="row" data-reveal>
+          <span class="app-dot app-dot--pink" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V9.5L12 4l8 5.5V20"/><path d="M9.5 20v-5.5h5V20"/></svg></span>
+          <div class="row__main">
+            <h3 class="row__title">Secondary School Certificate</h3>
+            <p class="row__sub">Saint Joseph's High School</p>
+          </div>
+          <p class="row__side"><span class="row__score">5.00<small> / 5.00</small></span><span class="row__when">2008 – 2018</span></p>
+        </li>
+      </ol>
+    </section>
 
-        // --- 5. Contact Form Handling ---
-        const contactForm = document.getElementById('contactForm');
-        
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            const baseClasses = "pointer-events-auto flex items-center w-full max-w-xs p-4 space-x-3 text-gray-500 bg-white dark:bg-stone-800 dark:text-gray-200 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full opacity-0";
-            const iconHtml = type === 'success' 
-                ? `<div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 dark:bg-green-900 rounded-lg"><i data-feather="check" class="w-5 h-5"></i></div>`
-                : `<div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 dark:bg-red-900 rounded-lg"><i data-feather="alert-circle" class="w-5 h-5"></i></div>`;
-            
-            toast.className = baseClasses;
-            toast.innerHTML = `
-                ${iconHtml}
-                <div class="text-sm font-normal text-primary dark:text-surface">${message}</div>
-            `;
+    <!-- ============ INTERESTS: a dock ============ -->
+    <section class="section interests" id="interests" aria-labelledby="interestsTitle">
+      <div class="section__head section__head--center" data-reveal>
+        <h2 class="section__title" id="interestsTitle">Beyond work</h2>
+        <p class="section__lede">What fills the hours away from the keyboard.</p>
+      </div>
+      <ul class="dock glass" id="dock" data-reveal="pop">
+        <li class="dock__item"><span class="dock__icon dock__icon--orange"><span class="lottie" data-lottie="aperture"></span></span><span class="dock__label">Photography</span></li>
+        <li class="dock__item"><span class="dock__icon dock__icon--green"><span class="lottie" data-lottie="pin"></span></span><span class="dock__label">Travel</span></li>
+        <li class="dock__item"><span class="dock__icon dock__icon--blue"><span class="lottie" data-lottie="letter"></span></span><span class="dock__label">Typography</span></li>
+        <li class="dock__item"><span class="dock__icon dock__icon--pink"><span class="lottie" data-lottie="notes"></span></span><span class="dock__label">Jazz</span></li>
+      </ul>
+    </section>
 
-            container.appendChild(toast);
-            feather.replace();
+    <!-- ============ CONTACT ============ -->
+    <section class="section contact" id="contact" aria-labelledby="contactTitle">
+      <div class="contact__card glass" data-reveal="pop">
+        <div class="contact__intro">
+          <h2 class="contact__title" id="contactTitle">Let's create something together.</h2>
+          <p class="contact__lede">Open for freelance projects and collaborations. Write here, or straight to my inbox.</p>
+          <a class="contact__email" href="mailto:anthonioalexdcosta@gmail.com">anthonioalexdcosta@gmail.com</a>
+          <div class="contact__actions">
+            <button class="btn btn--glass btn--small glass" type="button" id="copyEmail" data-email="anthonioalexdcosta@gmail.com">Copy email</button>
+            <ul class="socials">
+              <li><a href="https://github.com/anthonio-alex-dcosta" target="_blank" rel="noopener">GitHub</a></li>
+              <li><a href="https://www.linkedin.com/in/anthonio-alex-d-costa-515aba373/" target="_blank" rel="noopener">LinkedIn</a></li>
+              <li><a href="https://x.com/Axel22101749" target="_blank" rel="noopener">X</a></li>
+            </ul>
+          </div>
+        </div>
 
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-x-full', 'opacity-0');
-            });
+        <form class="form" id="contactForm" novalidate>
+          <div class="fields">
+            <div class="field">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" autocomplete="name" required placeholder="John Doe">
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" autocomplete="email" required placeholder="john@example.com">
+            </div>
+            <div class="field field--area">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="4" required placeholder="Tell me about your project…" aria-describedby="formHint"></textarea>
+            </div>
+          </div>
+          <p class="form__hint" id="formHint">Sending opens your email app with the message ready to go.</p>
+          <button class="btn btn--block" type="submit">Send message</button>
+          <div class="form__done" id="formDone" hidden>
+            <span class="lottie form__tick" data-lottie="success" data-manual="true"></span>
+            <p>Your email app should now be open with the message filled in. Press send there and it reaches me.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
 
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
+  <footer class="footer">
+    <p class="footer__name">Anthonio Alex D Costa</p>
+    <p class="footer__line">Building secure, intelligent, and user-friendly digital experiences.</p>
+    <div class="footer__bottom">
+      <p>&copy; <span id="year">2025</span> Anthonio Alex D Costa</p>
+      <a href="#top">Back to top <span aria-hidden="true">&uarr;</span></a>
+    </div>
+  </footer>
 
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const btn = contactForm.querySelector('button');
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = `<i data-feather="loader" class="animate-spin"></i> Sending...`;
-            feather.replace();
-            btn.disabled = true;
+  <!-- Dynamic Island style notifications -->
+  <div class="island" id="toast" role="status" aria-live="polite"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.6 2.6L16 9.5"/></svg><span id="toastText"></span></div>
 
-            setTimeout(() => {
-                showToast('Message sent successfully!');
-                contactForm.reset();
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                feather.replace();
-            }, 1500);
-        });
-
-        // --- 6. Network Canvas Animation ---
-        const canvas = document.getElementById('networkCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        let width, height;
-        let particles = [];
-        
-        const particleCount = window.innerWidth < 768 ? 30 : 60; 
-        const connectionDistance = 150;
-        const mouseDistance = 200;
-
-        let mouse = { x: null, y: null };
-        window.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            mouse.x = e.clientX - rect.left;
-            mouse.y = e.clientY - rect.top;
-        });
-        window.addEventListener('mouseleave', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-
-        function resize() {
-            width = canvas.width = canvas.parentElement.offsetWidth;
-            height = canvas.height = canvas.parentElement.offsetHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = (Math.random() - 0.5) * 0.5; 
-                this.vy = (Math.random() - 0.5) * 0.5; 
-                this.size = Math.random() * 2 + 1;
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-
-                if (mouse.x != null) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < mouseDistance) {
-                        const forceDirectionX = dx / distance;
-                        const forceDirectionY = dy / distance;
-                        const force = (mouseDistance - distance) / mouseDistance;
-                        const directionX = forceDirectionX * force * 0.5; 
-                        const directionY = forceDirectionY * force * 0.5;
-                        this.x -= directionX;
-                        this.y -= directionY;
-                    }
-                }
-            }
-
-            draw() {
-                const isDark = htmlElement.classList.contains('dark');
-                ctx.fillStyle = isDark ? '#a8a29e' : '#78716c';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-        }
-        initParticles();
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            
-            const isDark = htmlElement.classList.contains('dark');
-            
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-
-                for (let j = i; j < particles.length; j++) {
-                    let dx = particles[i].x - particles[j].x;
-                    let dy = particles[i].y - particles[j].y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < connectionDistance) {
-                        ctx.beginPath();
-                        let opacity = 1 - (distance / connectionDistance);
-                        let lineColor = isDark ? '168, 162, 158' : '120, 113, 108';
-                        ctx.strokeStyle = `rgba(${lineColor}, ${opacity * 0.2})`;
-                        ctx.lineWidth = 1;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            requestAnimationFrame(animate);
-        }
-        animate();
-    </script>
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
+  <script src="assets/vendor/lottie_light.min.js" defer></script>
+  <script src="assets/lottie/animations.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
 </body>
 </html>
-
-
