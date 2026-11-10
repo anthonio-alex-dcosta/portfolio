@@ -447,12 +447,18 @@ main { display: block; }
   height: min(90svh, 860px);
   min-height: 520px;
 }
+/* The wrapper centres the disc (no transforms on the disc itself, so the
+   scroll parallax on the wrapper can never knock it off-centre). */
+.hero__orb-wrap {
+  position: absolute; inset: 0; z-index: 1;
+  display: grid; place-items: center;
+  pointer-events: none;
+}
 .hero__orb {
-  position: absolute;
-  left: 50%; top: 50%;
-  width: min(92%, 74svh); aspect-ratio: 1;
-  translate: -50% -46%;
-  z-index: 1;
+  --orb: min(92%, 74svh);
+  position: relative;
+  width: var(--orb); aspect-ratio: 1;
+  margin-top: calc(var(--orb) * 0.08);   /* sits 4% below centre */
   border-radius: 50%;
   --blur: 18px;
   --rim-angle: 160deg;
@@ -887,7 +893,7 @@ main { display: block; }
   .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 0; }
   .hero__copy { padding-top: 104px; gap: 22px; }
   .hero__visual { height: auto; min-height: 0; aspect-ratio: 3 / 4; max-height: 76svh; margin-top: 8px; }
-  .hero__orb { width: 96%; }
+  .hero__orb { --orb: 96%; }
   .widget { padding: 10px 14px 10px 10px; border-radius: 20px; gap: 10px; }
   .widget--focus { padding: 12px 14px; }
   .widget__title { font-size: 0.875rem; }

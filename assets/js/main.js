@@ -569,9 +569,9 @@
   // zero it swings in front of the body (a little larger). Where it crosses
   // sides it dims briefly, so the change of layer never pops.
   function initOrbit() {
-    var visual = $('#heroVisual'), orb = $('.hero__orb');
+    var visual = $('#heroVisual'), orb = $('.hero__orb'), orbWrap = $('.hero__orb-wrap');
     var wraps = $$('.widget-wrap', visual);
-    if (!visual || !orb || !wraps.length) return;
+    if (!visual || !orb || !orbWrap || !wraps.length) return;
     var TURN = 36;                       // seconds per revolution
     var TILT = -0.16;                    // radians: the ring leans a little
     var starts = [-1.95, 0.25, 2.35];    // freelance near the head, CGPA right, focus front-left
@@ -598,9 +598,11 @@
       speed += (target - speed) * Math.min(1, dt * 2.5);
       angle += dt * speed * (Math.PI * 2) / TURN;
 
-      var vr = visual.getBoundingClientRect(), or = orb.getBoundingClientRect();
-      var cx = or.left + or.width / 2 - vr.left;
-      var cy = or.top + or.height / 2 - vr.top;
+      // Centre from layout (wrapper box + its parallax), not from the disc's
+      // painted box, so the ring always circles the portrait.
+      var vr = visual.getBoundingClientRect(), wr = orbWrap.getBoundingClientRect();
+      var cx = wr.left + wr.width / 2 - vr.left;
+      var cy = wr.top + wr.height / 2 + orb.offsetWidth * 0.04 - vr.top;
       var vw = document.documentElement.clientWidth;
       var small = vr.width < 520;
       var base = small ? 0.82 : 1;
