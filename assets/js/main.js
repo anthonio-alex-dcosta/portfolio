@@ -206,10 +206,8 @@
     activeId = id;
     navGroups.forEach(function (g) {
       var hit = null;
-      // The phone tab bar has no Research tab: light Work there instead.
-      var gid = (id === 'research' && !g.querySelector('a[href="#research"]')) ? 'work' : id;
       $$('a', g).forEach(function (a) {
-        var on = !!gid && a.getAttribute('href') === '#' + gid;
+        var on = !!id && a.getAttribute('href') === '#' + id;
         a.classList.toggle('is-active', on);
         if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
         if (on) hit = a;
@@ -254,11 +252,6 @@
     scrollRaf = 0;
     var y = window.scrollY;
     nav.classList.toggle('is-compact', y > 40);
-    if (tabbar) {
-      var dy = y - lastY;
-      if (dy > 4 && y > 240) tabbar.classList.add('is-min');
-      else if (dy < -4 || y < 240) tabbar.classList.remove('is-min');
-    }
     lastY = y;
     if (!held) setActive(currentSection());
   }

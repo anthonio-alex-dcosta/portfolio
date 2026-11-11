@@ -388,11 +388,10 @@ button { background: none; border: 0; padding: 0; cursor: pointer; }
   height: 64px; padding: 5px;
   border-radius: 999px;
   translate: -50% 0;
-  transition: scale 600ms var(--ease-soft), translate 600ms var(--ease-soft);
 }
-.tabbar.is-min { scale: 0.88; translate: -50% 6px; }
 .tabbar a {
   flex: 1 1 0; min-width: 0;
+  white-space: nowrap;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
   font-size: 0.6875rem; font-weight: 500; letter-spacing: 0;
   color: var(--ink-2);
@@ -1007,4 +1006,12 @@ main { display: block; }
   .dock__icon { width: 60px; }
   .dock__label { font-size: 0.75rem; }
   .contact__card { border-radius: 32px; }
+}
+
+/* Small phones: six tabs still breathe */
+@media (max-width: 360px) {
+  .tabbar { width: calc(100% - 16px); padding: 4px; }
+  .tabbar .lens { top: 4px; height: calc(100% - 8px); }
+  .tabbar a { font-size: 0.625rem; letter-spacing: -0.01em; }
+  .tabbar svg { width: 22px; height: 22px; }
 }
