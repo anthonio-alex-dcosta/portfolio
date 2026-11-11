@@ -194,7 +194,7 @@
   window.addEventListener('resize', refreshLenses);
 
   /* ----------------------------------------------------------- Navigation */
-  var NAV_IDS = ['about', 'skills', 'work', 'journey', 'contact'];
+  var NAV_IDS = ['about', 'skills', 'work', 'research', 'journey', 'contact'];
   var nav = $('#nav');
   var tabbar = $('#tabbar');
   var navGroups = $$('.nav__links, .tabbar');
@@ -206,8 +206,10 @@
     activeId = id;
     navGroups.forEach(function (g) {
       var hit = null;
+      // The phone tab bar has no Research tab: light Work there instead.
+      var gid = (id === 'research' && !g.querySelector('a[href="#research"]')) ? 'work' : id;
       $$('a', g).forEach(function (a) {
-        var on = !!id && a.getAttribute('href') === '#' + id;
+        var on = !!gid && a.getAttribute('href') === '#' + gid;
         a.classList.toggle('is-active', on);
         if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
         if (on) hit = a;
@@ -217,7 +219,7 @@
   }
 
   // Which section owns the middle of the screen right now?
-  var trackIds = ['about', 'skills', 'work', 'journey', 'interests', 'contact'];
+  var trackIds = ['about', 'skills', 'work', 'research', 'journey', 'interests', 'contact'];
   var trackEls = trackIds.map(function (id) { return document.getElementById(id); });
   function currentSection() {
     var line = window.innerHeight * 0.45, id = null;
@@ -517,6 +519,21 @@
     });
     $$('input, textarea', form).forEach(function (f) {
       f.addEventListener('input', function () { if (f.getAttribute('aria-invalid') === 'true') f.setAttribute('aria-invalid', 'false'); });
+    });
+  }
+
+  var citeBtn = $('#copyCite');
+  if (citeBtn) {
+    citeBtn.addEventListener('click', function () {
+      var value = citeBtn.getAttribute('data-cite');
+      var done = function () {
+        toast('Citation copied');
+        citeBtn.textContent = 'Copied';
+        setTimeout(function () { citeBtn.textContent = 'Copy citation'; }, 2000);
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(value).then(done, function () { fallbackCopy(value); done(); });
+      } else { fallbackCopy(value); done(); }
     });
   }
 

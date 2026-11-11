@@ -687,6 +687,50 @@ main { display: block; }
 .card__name { font-family: var(--font-display); font-size: 1.3125rem; font-weight: 600; letter-spacing: -0.025em; line-height: 1.2; }
 .card-cell--feature .card__name { font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem); }
 .card__desc { font-size: 0.9375rem; color: var(--ink-2); line-height: 1.45; text-wrap: pretty; }
+.card__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.card__tags span { padding: 4px 10px; border-radius: 999px; background: var(--fill); font-size: 0.8125rem; font-weight: 500; color: var(--ink-2); }
+
+/* A full-width card: photo on the left, words on the right */
+.card-cell--wide { grid-column: 1 / -1; }
+.card-cell--wide .card { flex-direction: row; align-items: stretch; }
+.card-cell--wide .card__media { flex: 0 0 56%; aspect-ratio: 16 / 9; }
+.card-cell--wide .card__body { align-content: center; gap: 8px; padding: clamp(20px, 3vw, 44px); }
+.card-cell--wide .card__name { font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem); }
+.card-cell--wide .card__desc { max-width: 46ch; }
+
+/* ==========================================================================
+   Research — a paper
+   ========================================================================== */
+.paper {
+  display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  border-radius: var(--r-xl); overflow: hidden;
+}
+.paper__main { display: grid; gap: 18px; align-content: start; padding: clamp(24px, 3.2vw, 44px); }
+.paper__venue { display: flex; align-items: center; gap: 12px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.3; }
+.paper__venue-sub { display: block; font-size: 0.875rem; font-weight: 500; color: var(--ink-2); letter-spacing: -0.01em; }
+.paper__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem); font-weight: 600;
+  line-height: 1.14; letter-spacing: -0.03em; text-wrap: balance;
+}
+.paper__authors { font-size: 0.9375rem; color: var(--ink-2); line-height: 1.5; text-wrap: pretty; }
+.paper__authors strong { color: var(--ink); font-weight: 600; }
+.paper__text { line-height: 1.5; max-width: 60ch; text-wrap: pretty; }
+.paper__text a { color: var(--link); }
+.paper__text a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.paper__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.paper__facts {
+  display: grid; align-content: center;
+  padding: 10px clamp(22px, 2.6vw, 32px);
+  background: color-mix(in srgb, var(--fill) 55%, transparent);
+  border-left: 0.5px solid var(--sep);
+}
+.paper__facts > div { display: grid; gap: 2px; align-content: start; padding: 16px 0; }
+.paper__facts > div + div { border-top: 0.5px solid var(--sep); }
+.paper__facts dt { font-size: 0.8125rem; font-weight: 500; color: var(--ink-2); }
+.paper__facts dd { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.018em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.paper__facts dd a { color: var(--link); }
+.paper__facts dd a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ==========================================================================
    Journey — inset grouped list
@@ -897,10 +941,19 @@ main { display: block; }
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .card-cell--feature { grid-row: auto; }
   .card-cell--feature .card__media { aspect-ratio: 16 / 9; flex: none; min-height: 0; }
+  /* Two columns: the wide card becomes an ordinary one, so seven fill evenly */
+  .card-cell--wide { grid-column: auto; }
+  .card-cell--wide .card { flex-direction: column; }
+  .card-cell--wide .card__media { flex: none; aspect-ratio: 4 / 3; }
+  .card-cell--wide .card__body { padding: 16px 14px 14px; gap: 6px; }
+  .card-cell--wide .card__name { font-size: 1.3125rem; }
   .contact__card { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 860px) {
+  .paper { grid-template-columns: 1fr; }
+  .paper__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; border-left: 0; border-top: 0.5px solid var(--sep); }
+  .paper__facts > div:nth-child(2) { border-top: 0; }
   .nav__links { display: none; }
   .nav__bar { padding: 0 6px 0 20px; }
 }
